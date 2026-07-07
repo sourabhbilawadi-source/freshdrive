@@ -1,5 +1,5 @@
 -- FreshDrive Supabase DB Schema
--- Location: Bengaluru, India (Fresher/Entry-Level Jobs Tracker)
+-- Location: Pan India (Fresher/Entry-Level & Government Jobs Tracker)
 
 -- Enable uuid-ossp if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -22,7 +22,7 @@ CREATE TABLE jobs (
   title TEXT NOT NULL,
   company_name TEXT NOT NULL,
   company_logo_url TEXT,
-  location TEXT NOT NULL DEFAULT 'Bengaluru',
+  location TEXT NOT NULL DEFAULT 'Pan India',
   ctc_min INTEGER, -- in LPA (e.g., 4)
   ctc_max INTEGER, -- in LPA (e.g., 6)
   category job_category NOT NULL,

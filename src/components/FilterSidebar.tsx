@@ -1,14 +1,15 @@
 import React from 'react';
 import { useStore } from '@nanostores/react';
-import { $filters, toggleCategory, toggleBondPeriod, setCtcRange } from '../stores/filterStore';
-import { Briefcase, IndianRupee, FileSignature, RotateCcw } from 'lucide-react';
+import { $filters, toggleCategory, toggleLocation, toggleBondPeriod, setCtcRange } from '../stores/filterStore';
+import { Briefcase, MapPin, IndianRupee, FileSignature, RotateCcw } from 'lucide-react';
 
 export default function FilterSidebar() {
-  const { categories, ctcMin, bondPeriods } = useStore($filters);
+  const { categories, locations, ctcMin, bondPeriods } = useStore($filters);
 
   const resetFilters = () => {
     $filters.set({
       categories: [],
+      locations: [],
       ctcMin: 0,
       ctcMax: 20,
       bondPeriods: [],
@@ -56,6 +57,42 @@ export default function FilterSidebar() {
                 )}
               </div>
               <span className="text-ink group-hover:text-coral transition-colors">{cat.label}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Location Checkboxes */}
+      <div className="flex flex-col gap-3">
+        <h4 className="font-sans text-xs font-bold text-slate uppercase tracking-wider flex items-center gap-1.5">
+          <MapPin className="w-4 h-4 text-slate" /> Location
+        </h4>
+        <div className="flex flex-col gap-2.5 font-sans text-sm font-semibold">
+          {[
+            { id: 'Bengaluru', label: 'Bengaluru' },
+            { id: 'Hyderabad', label: 'Hyderabad' },
+            { id: 'Pune', label: 'Pune' },
+            { id: 'Mumbai', label: 'Mumbai' },
+            { id: 'Delhi NCR', label: 'Delhi NCR' },
+            { id: 'Chennai', label: 'Chennai' },
+            { id: 'Kolkata', label: 'Kolkata' },
+            { id: 'Pan India', label: 'Pan India / Remote' },
+          ].map((loc) => (
+            <label key={loc.id} className="flex items-center gap-3 cursor-pointer group select-none">
+              <input
+                type="checkbox"
+                checked={locations.includes(loc.id)}
+                onChange={() => toggleLocation(loc.id)}
+                className="sr-only"
+              />
+              <div className={`w-5 h-5 border-brutal rounded flex items-center justify-center transition-all ${
+                locations.includes(loc.id) ? 'bg-lime' : 'bg-white'
+              }`}>
+                {locations.includes(loc.id) && (
+                  <div className="w-2.5 h-2.5 bg-ink rounded-sm" />
+                )}
+              </div>
+              <span className="text-ink group-hover:text-coral transition-colors">{loc.label}</span>
             </label>
           ))}
         </div>

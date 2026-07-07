@@ -4,7 +4,11 @@
 INSERT INTO companies (id, name, logo_url, career_page_url, category) VALUES
 ('11111111-1111-1111-1111-111111111111', 'Razorpay', 'https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?w=128&h=128&fit=crop&auto=format&q=80', 'https://razorpay.com/jobs/', 'product MNC'),
 ('22222222-2222-2222-2222-222222222222', 'Infosys', 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=128&h=128&fit=crop&auto=format&q=80', 'https://www.infosys.com/careers/', 'IT Services'),
-('33333333-3333-3333-3333-333333333333', 'Bharat Electronics Limited', 'https://images.unsplash.com/photo-1557683316-973673baf926?w=128&h=128&fit=crop&auto=format&q=80', 'https://bel-india.in/careers.aspx', 'Govt/PSU');
+('33333333-3333-3333-3333-333333333333', 'Bharat Electronics Limited', 'https://images.unsplash.com/photo-1557683316-973673baf926?w=128&h=128&fit=crop&auto=format&q=80', 'https://bel-india.in/careers.aspx', 'Govt/PSU'),
+('77777777-7777-7777-7777-777777777777', 'Tata Consultancy Services', 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=128&h=128&fit=crop&auto=format&q=80', 'https://www.tcs.com/careers', 'IT Services'),
+('88888888-8888-8888-8888-888888888888', 'Amazon', 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?w=128&h=128&fit=crop&auto=format&q=80', 'https://www.amazon.jobs/', 'product MNC'),
+('99999999-9999-9999-9999-999999999999', 'Staff Selection Commission', 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=128&h=128&fit=crop&auto=format&q=80', 'https://ssc.nic.in/', 'Govt/PSU'),
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Indian Banking Personnel Selection (IBPS)', 'https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?w=128&h=128&fit=crop&auto=format&q=80', 'https://www.ibps.in/', 'Govt/PSU');
 
 INSERT INTO jobs (
   id,
@@ -83,5 +87,85 @@ INSERT INTO jobs (
   CURRENT_DATE + INTERVAL '20 days',
   TRUE,
   'https://bel-india.in/careers.aspx',
+  TRUE
+),
+-- 4. TCS Ninja (IT Services) - Chennai - CTC 3.5 LPA
+(
+  '77777777-1111-1111-1111-111111111111',
+  'TCS Ninja - Assistant System Engineer',
+  'Tata Consultancy Services',
+  'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=128&h=128&fit=crop&auto=format&q=80',
+  'Chennai',
+  3,
+  3,
+  'it_services',
+  'TCS-NIN-2026-CHN',
+  '2026 Batch',
+  '1 Year',
+  'https://www.tcs.com/careers/india/ninja',
+  CURRENT_DATE - INTERVAL '1 day',
+  CURRENT_DATE + INTERVAL '15 days',
+  TRUE,
+  'https://www.tcs.com/careers',
+  TRUE
+),
+-- 5. Amazon (Product/MNC) - Hyderabad - CTC 10-15 LPA
+(
+  '88888888-1111-1111-1111-111111111111',
+  'ML Data Associate I',
+  'Amazon',
+  'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?w=128&h=128&fit=crop&auto=format&q=80',
+  'Hyderabad',
+  10,
+  15,
+  'product',
+  'AMZN-MLDA-2026-HYD',
+  '2025/2026 Batch',
+  'None',
+  'https://www.amazon.jobs/en-gb/jobs/10460561/ml-data-associate-i',
+  CURRENT_DATE - INTERVAL '1 day',
+  CURRENT_DATE + INTERVAL '10 days',
+  TRUE,
+  'https://www.amazon.jobs/',
+  TRUE
+),
+-- 6. SSC CGL (Govt/PSU) - Delhi NCR - CTC 4-8 LPA
+(
+  '99999999-1111-1111-1111-111111111111',
+  'Combined Graduate Level (CGL) - Various Posts',
+  'Staff Selection Commission',
+  'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=128&h=128&fit=crop&auto=format&q=80',
+  'Delhi NCR',
+  4,
+  8,
+  'govt',
+  'SSC-CGL-2026',
+  '2026 Batch',
+  'None',
+  'https://ssc.nic.in/notice-board',
+  CURRENT_DATE - INTERVAL '5 days',
+  CURRENT_DATE + INTERVAL '30 days',
+  TRUE,
+  'https://ssc.nic.in/',
+  TRUE
+),
+-- 7. IBPS PO (Govt/PSU) - Pan India - CTC 8-9 LPA
+(
+  'aaaaaaaa-1111-1111-1111-111111111111',
+  'Probationary Officer (PO) - Public Sector Banks',
+  'Indian Banking Personnel Selection (IBPS)',
+  'https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?w=128&h=128&fit=crop&auto=format&q=80',
+  'Pan India',
+  8,
+  9,
+  'govt',
+  'IBPS-PO-2026',
+  '2026 Batch',
+  'None',
+  'https://www.ibps.in/current-notifications',
+  CURRENT_DATE - INTERVAL '2 days',
+  CURRENT_DATE + INTERVAL '25 days',
+  TRUE,
+  'https://www.ibps.in/',
   TRUE
 );

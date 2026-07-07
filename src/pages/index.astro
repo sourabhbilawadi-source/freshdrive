@@ -17,7 +17,7 @@ const jobs = await getJobs();
 const stats = await getStats(jobs);
 ---
 
-<Layout title="FreshDrive | Verified Fresher & Entry-Level Jobs Tracker in Bengaluru">
+<Layout title="FreshDrive | Verified Fresher, Entry-Level & Government Jobs Tracker Across India">
   <Navbar />
   <Hero />
   <Stats stats={stats} />
@@ -93,7 +93,7 @@ const stats = await getStats(jobs);
           </div>
           <h3 class="font-display text-xl font-bold text-ink mb-2">Automated Scraping</h3>
           <p class="font-sans text-sm text-slate font-medium leading-relaxed">
-            Our pipeline tracks RSS, API, and career pages of verified tech MNCs, local product teams, and PSU portals in Bengaluru.
+            Our pipeline tracks RSS, API, and career pages of verified tech MNCs, product teams, and government/PSU portals across India.
           </p>
         </div>
 
@@ -137,13 +137,14 @@ const stats = await getStats(jobs);
 
   // Subscribe to changes in the shared Nano Store
   $filters.subscribe((state) => {
-    const { categories, ctcMin, bondPeriods, searchQuery, sortOrder } = state;
+    const { categories, locations, ctcMin, bondPeriods, searchQuery, sortOrder } = state;
     const searchLower = searchQuery.toLowerCase().trim();
 
     let visibleCount = 0;
 
     cardElements.forEach((card) => {
       const category = card.getAttribute('data-category') || '';
+      const location = (card.getAttribute('data-location') || '').toLowerCase();
       const ctc = parseFloat(card.getAttribute('data-ctc') || '0');
       const bond = card.getAttribute('data-bond') || '';
       const title = (card.getAttribute('data-title') || '').toLowerCase();
@@ -151,6 +152,10 @@ const stats = await getStats(jobs);
 
       // Check Category filter
       const matchesCategory = categories.length === 0 || categories.includes(category);
+      // Check Location filter (substring match, e.g. "Bengaluru" matches "Bengaluru (ORR)")
+      const matchesLocation =
+        locations.length === 0 ||
+        locations.some((loc: string) => location.includes(loc.toLowerCase()));
       // Check CTC filter (Min CTC check)
       const matchesCtc = ctc >= ctcMin;
       // Check Bond Period filter
@@ -161,7 +166,7 @@ const stats = await getStats(jobs);
         title.includes(searchLower) || 
         company.includes(searchLower);
 
-      if (matchesCategory && matchesCtc && matchesBond && matchesSearch) {
+      if (matchesCategory && matchesLocation && matchesCtc && matchesBond && matchesSearch) {
         card.style.display = '';
         card.setAttribute('data-visible', 'true');
         visibleCount++;

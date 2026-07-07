@@ -2,6 +2,7 @@ import { map } from 'nanostores';
 
 export interface FilterState {
   categories: string[];
+  locations: string[];
   ctcMin: number;
   ctcMax: number;
   bondPeriods: string[];
@@ -11,6 +12,7 @@ export interface FilterState {
 
 export const $filters = map<FilterState>({
   categories: [],
+  locations: [],
   ctcMin: 0,
   ctcMax: 20, // 20+ LPA covers the range
   bondPeriods: [],
@@ -25,6 +27,15 @@ export function toggleCategory(category: string) {
     $filters.setKey('categories', current.filter((c) => c !== category));
   } else {
     $filters.setKey('categories', [...current, category]);
+  }
+}
+
+export function toggleLocation(location: string) {
+  const current = $filters.get().locations;
+  if (current.includes(location)) {
+    $filters.setKey('locations', current.filter((l) => l !== location));
+  } else {
+    $filters.setKey('locations', [...current, location]);
   }
 }
 
