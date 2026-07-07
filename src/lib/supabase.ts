@@ -18,6 +18,8 @@ export interface Job {
   is_active: boolean;
   source_url: string;
   is_sample: boolean;
+  description: string;  // Detailed job description
+  eligibility: string;  // Eligibility criteria details
 }
 
 // Generate dynamic relative dates for the sample data so it's always current
@@ -46,6 +48,8 @@ export const MOCK_JOBS: Job[] = [
     is_active: true,
     source_url: 'https://razorpay.com/jobs/',
     is_sample: true,
+    description: 'Join Razorpay as a Software Engineer Intern and work on our core payment gateway team. You will build and scale high-throughput APIs, optimize database performance, and collaborate with product managers to deliver seamless developer experiences. Excellent opportunity to learn about scalable fintech architectures.',
+    eligibility: 'Eligibility: 2026 Batch B.E. / B.Tech / M.Tech in CS/IT or equivalent. Good understanding of data structures, algorithms, and web development in Node.js, Go, or Java. No active backlogs. Minimum 7.5 CGPA.'
   },
   {
     id: '55555555-5555-5555-5555-555555555555',
@@ -65,6 +69,8 @@ export const MOCK_JOBS: Job[] = [
     is_active: true,
     source_url: 'https://www.infosys.com/careers/',
     is_sample: true,
+    description: 'As an Associate Systems Engineer at Infosys, you will undergo our world-class training program at Mysore. Post-training, you will work on software development, cloud operations, application maintenance, or system administration for our global clients. You will write code, troubleshoot issues, and contribute to software maintenance cycles.',
+    eligibility: 'Eligibility: 2025/2026 Batch B.E. / B.Tech / M.E. / M.Tech in any engineering stream, or MCA / M.Sc (CS/IT). Minimum 60% or 6.0 CGPA throughout 10th, 12th, and graduation.'
   },
   {
     id: '66666666-6666-6666-6666-666666666666',
@@ -84,6 +90,8 @@ export const MOCK_JOBS: Job[] = [
     is_active: true,
     source_url: 'https://bel-india.in/careers.aspx',
     is_sample: true,
+    description: 'Bharat Electronics Limited (BEL), a Navratna PSU under the Ministry of Defence, is hiring Graduate Engineer Trainees for its Bengaluru unit. You will work on design, development, and testing of advanced electronics systems, radars, and communication equipment for defense forces. The position includes a 2-year bond period.',
+    eligibility: 'Eligibility: 2026 Batch B.E. / B.Tech in Electronics & Communication, Telecommunication, or Electrical engineering. First class degree for General/OBC, pass class for SC/ST. Age limit: 25 years.'
   },
   {
     id: '77777777-1111-1111-1111-111111111111',
@@ -103,6 +111,8 @@ export const MOCK_JOBS: Job[] = [
     is_active: true,
     source_url: 'https://www.tcs.com/careers',
     is_sample: true,
+    description: 'TCS is hiring for Assistant System Engineers under the Ninja category. You will be assigned to client projects across various domains including BFSI, retail, manufacturing, and health. Responsibilities include software coding, business analytics, QA testing, and systems support.',
+    eligibility: 'Eligibility: 2026 Batch B.E. / B.Tech / M.E. / M.Tech / MCA / M.Sc. Minimum 60% throughout education. All academic courses must be completed in the stipulated duration. Maximum 1 backlog allowed at the time of application.'
   },
   {
     id: '88888888-1111-1111-1111-111111111111',
@@ -122,6 +132,8 @@ export const MOCK_JOBS: Job[] = [
     is_active: true,
     source_url: 'https://www.amazon.jobs/',
     is_sample: true,
+    description: 'The ML Data Associate I is responsible for labeling and annotating complex linguistic, audio, and visual datasets to train machine learning models for Amazon Alexa and search devices. You will work in a fast-paced environment verifying annotations, fixing transcription errors, and compiling metrics.',
+    eligibility: 'Eligibility: 2025/2026 Batch graduates with any Bachelor\'s degree. Excellent written and verbal communication in English. Familiarity with basic office tools (Excel) and computer systems.'
   },
   {
     id: '99999999-1111-1111-1111-111111111111',
@@ -141,6 +153,8 @@ export const MOCK_JOBS: Job[] = [
     is_active: true,
     source_url: 'https://ssc.nic.in/',
     is_sample: true,
+    description: 'Staff Selection Commission conducts the CGL examination to recruit candidates for Group B and Group C posts in various ministries, departments, and organizations of the Government of India. Selected candidates will hold critical positions in administration, audit, and tax inspection.',
+    eligibility: 'Eligibility: 2026 Batch graduates (Bachelor\'s degree in any discipline). Age limit varies by post (typically 18-32 years). Selection based on Tier-I and Tier-II computer-based examinations.'
   },
   {
     id: 'aaaaaaaa-1111-1111-1111-111111111111',
@@ -160,13 +174,14 @@ export const MOCK_JOBS: Job[] = [
     is_active: true,
     source_url: 'https://www.ibps.in/',
     is_sample: true,
+    description: 'The Institute of Banking Personnel Selection conducts the common recruitment process for Probationary Officers (PO) in public sector banks across India. Candidates undergo training in retail banking, credit operations, and branch administration.',
+    eligibility: 'Eligibility: 2026 Batch graduates with any Bachelor\'s degree. Age limit: 20-30 years. Selection process consists of Preliminary and Main exams followed by a common interview.'
   }
 ];
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
-// Check if credentials are set
 const isCredentialsAvailable = supabaseUrl && supabaseAnonKey;
 
 const supabase = isCredentialsAvailable 

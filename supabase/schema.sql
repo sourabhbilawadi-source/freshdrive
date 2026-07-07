@@ -34,7 +34,9 @@ CREATE TABLE jobs (
   closing_date DATE,
   is_active BOOLEAN NOT NULL DEFAULT TRUE,
   source_url TEXT, -- Link to original page where sourced
-  is_sample BOOLEAN NOT NULL DEFAULT FALSE -- Tagged as sample data in UI
+  is_sample BOOLEAN NOT NULL DEFAULT FALSE, -- Tagged as sample data in UI
+  description TEXT, -- Detailed description of the job profile
+  eligibility TEXT -- Detailed eligibility criteria
 );
 
 -- =========================================================================

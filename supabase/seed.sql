@@ -27,7 +27,9 @@ INSERT INTO jobs (
   closing_date,
   is_active,
   source_url,
-  is_sample
+  is_sample,
+  description,
+  eligibility
 ) VALUES
 -- 1. Razorpay (Product/MNC) - CTC 8-12 LPA, Closing soon
 (
@@ -47,7 +49,9 @@ INSERT INTO jobs (
   CURRENT_DATE + INTERVAL '4 days',
   TRUE,
   'https://razorpay.com/jobs/',
-  TRUE
+  TRUE,
+  'Join Razorpay as a Software Engineer Intern and work on our core payment gateway team. You will build and scale high-throughput APIs, optimize database performance, and collaborate with product managers to deliver seamless developer experiences. Excellent opportunity to learn about scalable fintech architectures.',
+  'Eligibility: 2026 Batch B.E. / B.Tech / M.Tech in CS/IT or equivalent. Good understanding of data structures, algorithms, and web development in Node.js, Go, or Java. No active backlogs. Minimum 7.5 CGPA.'
 ),
 -- 2. Infosys (IT Services) - CTC 3-4 LPA
 (
@@ -67,7 +71,9 @@ INSERT INTO jobs (
   CURRENT_DATE + INTERVAL '12 days',
   TRUE,
   'https://www.infosys.com/careers/',
-  TRUE
+  TRUE,
+  'As an Associate Systems Engineer at Infosys, you will undergo our world-class training program at Mysore. Post-training, you will work on software development, cloud operations, application maintenance, or system administration for our global clients. You will write code, troubleshoot issues, and contribute to software maintenance cycles.',
+  'Eligibility: 2025/2026 Batch B.E. / B.Tech / M.E. / M.Tech in any engineering stream, or MCA / M.Sc (CS/IT). Minimum 60% or 6.0 CGPA throughout 10th, 12th, and graduation.'
 ),
 -- 3. BEL (Govt/PSU) - CTC 12 LPA
 (
@@ -87,9 +93,11 @@ INSERT INTO jobs (
   CURRENT_DATE + INTERVAL '20 days',
   TRUE,
   'https://bel-india.in/careers.aspx',
-  TRUE
+  TRUE,
+  'Bharat Electronics Limited (BEL), a Navratna PSU under the Ministry of Defence, is hiring Graduate Engineer Trainees for its Bengaluru unit. You will work on design, development, and testing of advanced electronics systems, radars, and communication equipment for defense forces. The position includes a 2-year bond period.',
+  'Eligibility: 2026 Batch B.E. / B.Tech in Electronics & Communication, Telecommunication, or Electrical engineering. First class degree for General/OBC, pass class for SC/ST. Age limit: 25 years.'
 ),
--- 4. TCS Ninja (IT Services) - Chennai - CTC 3.5 LPA
+-- 4. TCS Ninja (IT Services) - Chennai - CTC 3 LPA
 (
   '77777777-1111-1111-1111-111111111111',
   'TCS Ninja - Assistant System Engineer',
@@ -107,7 +115,9 @@ INSERT INTO jobs (
   CURRENT_DATE + INTERVAL '15 days',
   TRUE,
   'https://www.tcs.com/careers',
-  TRUE
+  TRUE,
+  'TCS is hiring for Assistant System Engineers under the Ninja category. You will be assigned to client projects across various domains including BFSI, retail, manufacturing, and health. Responsibilities include software coding, business analytics, QA testing, and systems support.',
+  'Eligibility: 2026 Batch B.E. / B.Tech / M.E. / M.Tech / MCA / M.Sc. Minimum 60% throughout education. All academic courses must be completed in the stipulated duration. Maximum 1 backlog allowed at the time of application.'
 ),
 -- 5. Amazon (Product/MNC) - Hyderabad - CTC 10-15 LPA
 (
@@ -127,7 +137,9 @@ INSERT INTO jobs (
   CURRENT_DATE + INTERVAL '10 days',
   TRUE,
   'https://www.amazon.jobs/',
-  TRUE
+  TRUE,
+  'The ML Data Associate I is responsible for labeling and annotating complex linguistic, audio, and visual datasets to train machine learning models for Amazon Alexa and search devices. You will work in a fast-paced environment verifying annotations, fixing transcription errors, and compiling metrics.',
+  'Eligibility: 2025/2026 Batch graduates with any Bachelor''s degree. Excellent written and verbal communication in English. Familiarity with basic office tools (Excel) and computer systems.'
 ),
 -- 6. SSC CGL (Govt/PSU) - Delhi NCR - CTC 4-8 LPA
 (
@@ -147,7 +159,9 @@ INSERT INTO jobs (
   CURRENT_DATE + INTERVAL '30 days',
   TRUE,
   'https://ssc.nic.in/',
-  TRUE
+  TRUE,
+  'Staff Selection Commission conducts the CGL examination to recruit candidates for Group B and Group C posts in various ministries, departments, and organizations of the Government of India. Selected candidates will hold critical positions in administration, audit, and tax inspection.',
+  'Eligibility: 2026 Batch graduates (Bachelor''s degree in any discipline). Age limit varies by post (typically 18-32 years). Selection based on Tier-I and Tier-II computer-based examinations.'
 ),
 -- 7. IBPS PO (Govt/PSU) - Pan India - CTC 8-9 LPA
 (
@@ -167,5 +181,7 @@ INSERT INTO jobs (
   CURRENT_DATE + INTERVAL '25 days',
   TRUE,
   'https://www.ibps.in/',
-  TRUE
+  TRUE,
+  'The Institute of Banking Personnel Selection conducts the common recruitment process for Probationary Officers (PO) in public sector banks across India. Candidates undergo training in retail banking, credit operations, and branch administration.',
+  'Eligibility: 2026 Batch graduates with any Bachelor''s degree. Age limit: 20-30 years. Selection process consists of Preliminary and Main exams followed by a common interview.'
 );
