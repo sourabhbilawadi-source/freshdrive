@@ -1,0 +1,52 @@
+---
+import type { JobStats } from '../lib/supabase';
+
+interface Props {
+  stats: JobStats;
+}
+
+const { stats } = Astro.props;
+---
+<section id="stats-section" class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <!-- Stat 1: Open roles -->
+    <div class="bg-ink border-2 border-ink p-5 rounded-2xl shadow-brutal flex flex-col items-center justify-center text-center hover:-translate-y-1 transition-transform">
+      <span class="font-mono text-3xl sm:text-4xl font-black text-lime mb-1">
+        {stats.openRolesToday.toString().padStart(2, '0')}
+      </span>
+      <span class="font-sans text-xxs sm:text-xs font-bold text-cream uppercase tracking-widest">
+        Open Roles
+      </span>
+    </div>
+
+    <!-- Stat 2: Companies -->
+    <div class="bg-ink border-2 border-ink p-5 rounded-2xl shadow-brutal flex flex-col items-center justify-center text-center hover:-translate-y-1 transition-transform">
+      <span class="font-mono text-3xl sm:text-4xl font-black text-lime mb-1">
+        {stats.companiesHiring.toString().padStart(2, '0')}
+      </span>
+      <span class="font-sans text-xxs sm:text-xs font-bold text-cream uppercase tracking-widest">
+        Companies Sourced
+      </span>
+    </div>
+
+    <!-- Stat 3: New in 24h -->
+    <div class="bg-ink border-2 border-ink p-5 rounded-2xl shadow-brutal flex flex-col items-center justify-center text-center hover:-translate-y-1 transition-transform">
+      <span class="font-mono text-3xl sm:text-4xl font-black text-coral mb-1">
+        +{stats.newLast24h}
+      </span>
+      <span class="font-sans text-xxs sm:text-xs font-bold text-cream uppercase tracking-widest">
+        New Last 24h
+      </span>
+    </div>
+
+    <!-- Stat 4: Closing soon -->
+    <div class="bg-ink border-2 border-ink p-5 rounded-2xl shadow-brutal flex flex-col items-center justify-center text-center hover:-translate-y-1 transition-transform">
+      <span class="font-mono text-3xl sm:text-4xl font-black text-amber mb-1">
+        {stats.closingThisWeek.toString().padStart(2, '0')}
+      </span>
+      <span class="font-sans text-xxs sm:text-xs font-bold text-cream uppercase tracking-widest">
+        Closing Soon
+      </span>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+:root {
+  --lime: #C4E86B;
+  --cream: #FAF3E7;
+  --ink: #1C2415;
+  --coral: #FF6B4A;
+  --slate: #5C6055;
+  --amber: #DBA829;
+}
+
+@theme {
+  --color-lime: var(--lime);
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
+  --color-coral: var(--coral);
+  --color-slate: var(--slate);
+  --color-amber: var(--amber);
+
+  --font-display: "Fraunces", serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --shadow-brutal: 5px 5px 0px 0px var(--ink);
+  --shadow-brutal-hover: 2px 2px 0px 0px var(--ink);
+  --shadow-button: 3px 3px 0px 0px var(--ink);
+  --shadow-button-hover: 1px 1px 0px 0px var(--ink);
+}
+
+/* Base resets & styles */
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: "Inter", sans-serif;
+}
+
+/* Custom Neo-Brutalist Outlines & Borders */
+.border-brutal {
+  border: 2.5px solid var(--ink);
+}
+
+.border-brutal-3 {
+  border: 3px solid var(--ink);
+}
+
+/* Interactive elements buttons & transitions */
+.btn-brutal {
+  border: 2.5px solid var(--ink);
+  box-shadow: var(--shadow-button);
+  transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-brutal:hover:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px 0px var(--ink);
+}
+
+.btn-brutal:active:not(:disabled) {
+  transform: translate(2.5px, 2.5px);
+  box-shadow: 0.5px 0.5px 0px 0px var(--ink);
+}
+
+.btn-brutal:focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 3px;
+}
+
+.card-brutal {
+  border: 2.5px solid var(--ink);
+  box-shadow: var(--shadow-brutal);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-brutal:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px 0px var(--ink);
+}
+
+/* Keyboard focus rings for interactive elements */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--coral) !important;
+  outline-offset: 3px !important;
+}
+
+/* Hide default outlines */
+a:focus,
+button:focus,
+input:focus,
+select:focus {
+  outline: none;
+}
+
+/* Accessibility: respect user prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-delay: 0s !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+  .btn-brutal:hover,
+  .btn-brutal:active,
+  .card-brutal:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-button) !important;
+  }
+  .card-brutal:hover {
+    box-shadow: var(--shadow-brutal) !important;
+  }
+}

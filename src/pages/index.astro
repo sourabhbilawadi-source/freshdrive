@@ -1,0 +1,214 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import Stats from '../components/Stats.astro';
+import Footer from '../components/Footer.astro';
+import JobCard from '../components/JobCard.astro';
+
+// React Islands
+import SearchBar from '../components/SearchBar';
+import FilterSidebar from '../components/FilterSidebar';
+import SortDropdown from '../components/SortDropdown';
+
+// Data fetching
+import { getJobs, getStats } from '../lib/supabase';
+const jobs = await getJobs();
+const stats = await getStats(jobs);
+---
+
+<Layout title="FreshDrive | Verified Fresher & Entry-Level Jobs Tracker in Bengaluru">
+  <Navbar />
+  <Hero />
+  <Stats stats={stats} />
+
+  <!-- Main Section: Listings & Filters -->
+  <main id="listings" class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-12">
+    <div class="flex flex-col gap-6">
+      
+      <!-- Top Grid: Title, Search, Sort -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-lime/10 border-brutal p-6 rounded-2xl">
+        <div class="flex flex-col">
+          <h2 class="font-display text-3xl font-black text-ink">Today's Openings</h2>
+          <p id="listings-count" class="font-mono text-xs font-bold text-slate mt-1 uppercase">
+            {jobs.length} verified {jobs.length === 1 ? 'opening' : 'openings'}
+          </p>
+        </div>
+        <div class="flex-1 max-w-xl md:mx-6">
+          <SearchBar client:load />
+        </div>
+        <div>
+          <SortDropdown client:load />
+        </div>
+      </div>
+
+      <!-- Content Layout: Sidebar + Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
+        <!-- Sidebar filters -->
+        <aside class="md:col-span-1">
+          <FilterSidebar client:load />
+        </aside>
+
+        <!-- Listings Grid -->
+        <div class="md:col-span-3">
+          <!-- Empty State (Hidden initially) -->
+          <div 
+            id="empty-state" 
+            style="display: none;" 
+            class="bg-white border-brutal p-12 rounded-2xl shadow-brutal text-center flex flex-col items-center justify-center gap-4"
+          >
+            <span class="text-4xl">🔍</span>
+            <h3 class="font-display text-2xl font-black text-ink">No matching openings found</h3>
+            <p class="font-sans text-sm font-semibold text-slate max-w-sm">
+              We couldn't find any listings matching those filters. Try clearing your search or category selections!
+            </p>
+          </div>
+
+          <!-- Job Cards Grid -->
+          <div id="job-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {jobs.map((job) => (
+              <JobCard job={job} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-16">
+    <div class="bg-lime/25 border-brutal rounded-3xl p-8 md:p-12 shadow-brutal">
+      <div class="text-center max-w-xl mx-auto mb-12">
+        <h2 class="font-display text-3xl md:text-4xl font-black text-ink mb-4">How FreshDrive Sourcing Works</h2>
+        <p class="font-sans text-base font-semibold text-slate">
+          We believe job hunting shouldn't feel like navigating a maze. Here is how we verify the listings we present.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="bg-white border-brutal p-6 rounded-2xl shadow-brutal hover:translate-y-[-2px] transition-transform">
+          <div class="w-10 h-10 bg-lime border-2 border-ink rounded-full flex items-center justify-center font-mono font-bold text-lg mb-4">
+            1
+          </div>
+          <h3 class="font-display text-xl font-bold text-ink mb-2">Automated Scraping</h3>
+          <p class="font-sans text-sm text-slate font-medium leading-relaxed">
+            Our pipeline tracks RSS, API, and career pages of verified tech MNCs, local product teams, and PSU portals in Bengaluru.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="bg-white border-brutal p-6 rounded-2xl shadow-brutal hover:translate-y-[-2px] transition-transform">
+          <div class="w-10 h-10 bg-coral border-2 border-ink rounded-full flex items-center justify-center font-mono font-bold text-lg text-white mb-4">
+            2
+          </div>
+          <h3 class="font-display text-xl font-bold text-ink mb-2">Verification Filter</h3>
+          <p class="font-sans text-sm text-slate font-medium leading-relaxed">
+            We weed out spam recruiters, training courses, and third-party consultancy agents. Only genuine direct roles get listed.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-white border-brutal p-6 rounded-2xl shadow-brutal hover:translate-y-[-2px] transition-transform">
+          <div class="w-10 h-10 bg-amber border-2 border-ink rounded-full flex items-center justify-center font-mono font-bold text-lg mb-4">
+            3
+          </div>
+          <h3 class="font-display text-xl font-bold text-ink mb-2">Direct External Apply</h3>
+          <p class="font-sans text-sm text-slate font-medium leading-relaxed">
+            Every listing redirects you to the company's official portal. We do not store applications or collect personal data.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<script>
+  import { $filters } from '../stores/filterStore';
+
+  const container = document.getElementById('job-grid');
+  const emptyState = document.getElementById('empty-state');
+  const countLabel = document.getElementById('listings-count');
+  
+  // Keep an array of elements with data attributes
+  const cardElements = Array.from(document.querySelectorAll('.job-card-wrapper')) as HTMLElement[];
+
+  // Subscribe to changes in the shared Nano Store
+  $filters.subscribe((state) => {
+    const { categories, ctcMin, bondPeriods, searchQuery, sortOrder } = state;
+    const searchLower = searchQuery.toLowerCase().trim();
+
+    let visibleCount = 0;
+
+    cardElements.forEach((card) => {
+      const category = card.getAttribute('data-category') || '';
+      const ctc = parseFloat(card.getAttribute('data-ctc') || '0');
+      const bond = card.getAttribute('data-bond') || '';
+      const title = (card.getAttribute('data-title') || '').toLowerCase();
+      const company = (card.getAttribute('data-company') || '').toLowerCase();
+
+      // Check Category filter
+      const matchesCategory = categories.length === 0 || categories.includes(category);
+      // Check CTC filter (Min CTC check)
+      const matchesCtc = ctc >= ctcMin;
+      // Check Bond Period filter
+      const matchesBond = bondPeriods.length === 0 || bondPeriods.includes(bond);
+      // Check Search text filter
+      const matchesSearch = 
+        searchLower === '' || 
+        title.includes(searchLower) || 
+        company.includes(searchLower);
+
+      if (matchesCategory && matchesCtc && matchesBond && matchesSearch) {
+        card.style.display = '';
+        card.setAttribute('data-visible', 'true');
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+        card.setAttribute('data-visible', 'false');
+      }
+    });
+
+    // Sort the currently visible card elements
+    const visibleCards = cardElements.filter(
+      (card) => card.getAttribute('data-visible') === 'true'
+    );
+
+    visibleCards.sort((a, b) => {
+      if (sortOrder === 'newest') {
+        const dateA = a.getAttribute('data-posted-date') || '';
+        const dateB = b.getAttribute('data-posted-date') || '';
+        // Descending posted date (latest first)
+        return dateB.localeCompare(dateA);
+      } else if (sortOrder === 'deadline') {
+        const dateA = a.getAttribute('data-closing-date') || '';
+        const dateB = b.getAttribute('data-closing-date') || '';
+        // Ascending closing date (earliest closes first)
+        return dateA.localeCompare(dateB);
+      } else if (sortOrder === 'ctc') {
+        const ctcA = parseFloat(a.getAttribute('data-ctc') || '0');
+        const ctcB = parseFloat(b.getAttribute('data-ctc') || '0');
+        // Descending CTC (highest first)
+        return ctcB - ctcA;
+      }
+      return 0;
+    });
+
+    // Re-append to container to adjust rendering order in-place
+    if (container) {
+      visibleCards.forEach((card) => container.appendChild(card));
+    }
+
+    // Toggle Empty state view
+    if (emptyState) {
+      emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
+    }
+
+    // Update verified listings count text
+    if (countLabel) {
+      countLabel.textContent = `${visibleCount} verified ${visibleCount === 1 ? 'opening' : 'openings'}`;
+    }
+  });
+</script>

@@ -1,0 +1,32 @@
+---
+---
+<header class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <nav class="bg-lime border-brutal-3 rounded-2xl px-6 py-4 flex items-center justify-between shadow-brutal my-6" aria-label="Main Navigation">
+    <div class="flex items-center gap-8">
+      <a href="/" class="font-display text-2xl font-black text-ink hover:text-coral transition-colors" aria-label="FreshDrive home">
+        FreshDrive
+      </a>
+      <div class="hidden md:flex items-center gap-8 font-sans font-bold text-ink">
+        <a href="#listings" class="hover:text-coral transition-colors">Roles</a>
+        <a href="#stats-section" class="hover:text-coral transition-colors">Companies</a>
+        <a href="#footer-section" class="hover:text-coral transition-colors">About</a>
+      </div>
+    </div>
+    
+    <div>
+      <button 
+        id="alerts-nav-btn"
+        class="bg-ink text-lime hover:text-white font-sans font-bold px-5 py-2.5 rounded-full border-2 border-ink shadow-button hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-button-hover active:translate-x-[2.5px] active:translate-y-[2.5px] active:shadow-none transition-all cursor-pointer text-sm"
+      >
+        Get daily alerts
+      </button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const alertBtn = document.getElementById('alerts-nav-btn');
+  alertBtn?.addEventListener('click', () => {
+    alert('🔔 Daily job alerts coming soon! Subscribe script is ready.');
+  });
+</script>
