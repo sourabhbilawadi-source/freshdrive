@@ -1,21 +1,35 @@
-name: Scheduled Rebuild
+name: Scheduled Rebuild & Deploy
 
 on:
   schedule:
-    # Trigger a rebuild once daily at 00:00 UTC (5:30 AM IST)
+    # Trigger once daily at 00:00 UTC (5:30 AM IST)
     - cron: '0 0 * * *'
   workflow_dispatch: # Allow manual triggering from GitHub Actions tab
 
 jobs:
   deploy:
-    name: Trigger Cloudflare Deployment
+    name: Build & Deploy to Cloudflare Workers
     runs-on: ubuntu-latest
     steps:
-      - name: Send Deploy Hook Request
-        run: |
-          if [ -z "${{ secrets.CLOUDFLARE_PAGES_DEPLOY_HOOK }}" ]; then
-            echo "❌ Error: CLOUDFLARE_PAGES_DEPLOY_HOOK secret is missing."
-            exit 1
-          fi
-          curl -s -X POST "${{ secrets.CLOUDFLARE_PAGES_DEPLOY_HOOK }}"
-          echo "✅ Cloudflare build triggered successfully."
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Astro Site
+        run: npm run build
+        env:
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: deploy
