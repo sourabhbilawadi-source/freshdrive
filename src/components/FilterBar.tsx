@@ -108,13 +108,13 @@ export default function FilterBar() {
   };
 
   return (
-    <div ref={containerRef} className="w-full flex items-center justify-between gap-4 bg-cream border-brutal p-4 rounded-2xl shadow-brutal relative">
+    <div ref={containerRef} className="w-full bg-cream border-brutal p-4 rounded-2xl shadow-brutal relative overflow-hidden">
       <div 
         ref={scrollContainerRef}
-        className="flex items-center gap-3 overflow-x-auto scrollbar-none flex-1 py-1 snap-x"
+        className="flex items-center gap-3 overflow-x-auto scrollbar-none w-full py-1 snap-x pr-8"
       >
         {/* Category Filter */}
-        <div className="snap-start">
+        <div className="snap-start shrink-0">
           <button
             ref={categoryBtnRef}
             onClick={() => handleToggleDropdown('category', categoryBtnRef)}
@@ -134,7 +134,7 @@ export default function FilterBar() {
         </div>
 
         {/* Location Filter */}
-        <div className="snap-start">
+        <div className="snap-start shrink-0">
           <button
             ref={locationBtnRef}
             onClick={() => handleToggleDropdown('location', locationBtnRef)}
@@ -154,7 +154,7 @@ export default function FilterBar() {
         </div>
 
         {/* CTC Filter */}
-        <div className="snap-start">
+        <div className="snap-start shrink-0">
           <button
             ref={ctcBtnRef}
             onClick={() => handleToggleDropdown('ctc', ctcBtnRef)}
@@ -174,7 +174,7 @@ export default function FilterBar() {
         </div>
 
         {/* Bond Period Filter */}
-        <div className="snap-start">
+        <div className="snap-start shrink-0">
           <button
             ref={bondBtnRef}
             onClick={() => handleToggleDropdown('bond', bondBtnRef)}
@@ -192,16 +192,21 @@ export default function FilterBar() {
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${openDropdown === 'bond' ? 'rotate-180' : ''}`} />
           </button>
         </div>
+
+        {/* Reset button */}
+        <div className="snap-start shrink-0">
+          <button
+            onClick={resetFilters}
+            className="btn-brutal bg-white text-ink hover:text-coral px-4 py-2 rounded-full font-sans font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-button hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-button-hover active:translate-x-[2px] active:translate-y-[2px]"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Reset
+          </button>
+        </div>
       </div>
 
-      {/* Reset button */}
-      <button
-        onClick={resetFilters}
-        className="btn-brutal bg-white text-ink hover:text-coral px-4 py-2 rounded-full font-sans font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-button hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-button-hover active:translate-x-[2px] active:translate-y-[2px] shrink-0"
-      >
-        <RotateCcw className="w-3.5 h-3.5" />
-        Reset
-      </button>
+      {/* Right side fade indicator for scrolling on mobile */}
+      <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-cream via-cream/80 to-transparent pointer-events-none rounded-r-2xl md:hidden z-10" />
 
       {/* Dropdown Popover Panel (fixed positioning avoids scrolling container overflow clips) */}
       {openDropdown && (
