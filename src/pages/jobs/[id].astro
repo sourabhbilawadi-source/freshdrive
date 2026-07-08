@@ -21,6 +21,23 @@ if (!job && id) {
   job = await getJobById(id);
 }
 
+// Find similar jobs (same category or location, excluding current job)
+const allJobs = await getJobs();
+const similarJobs = job
+  ? allJobs
+      .filter((j) => j.id !== job.id && (j.category === job.category || j.location === job.location))
+      .slice(0, 3)
+  : [];
+
+// Fallbacks for arrays & text to prevent crashes if missing
+const aboutCompany = job?.about_company || '';
+const responsibilities = job?.responsibilities || [];
+const requiredSkills = job?.required_skills || [];
+const niceToHaveSkills = job?.nice_to_have_skills || [];
+const perksBenefits = job?.perks_benefits || [];
+const selectionProcess = job?.selection_process || [];
+const howToApply = job?.how_to_apply || '';
+
 const isClosingSoon = (() => {
   if (!job) return false;
   const now = new Date();
@@ -47,12 +64,50 @@ const getCategoryLabel = (cat: string) => {
     default: return 'Other';
   }
 };
+
+// Generate JSON-LD schema
+const jobSchema = job ? {
+  "@context": "https://schema.org",
+  "@type": "JobPosting",
+  "title": job.title,
+  "description": job.description,
+  "datePosted": job.posted_date,
+  "validThrough": job.closing_date,
+  "employmentType": job.category === 'govt' ? "FULL_TIME" : "FULL_TIME",
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": job.company_name,
+    "logo": job.company_logo_url
+  },
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": job.location,
+      "addressCountry": "IN"
+    }
+  },
+  "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "INR",
+    "value": {
+      "@type": "QuantitativeValue",
+      "minValue": job.ctc_min * 100000,
+      "maxValue": job.ctc_max * 100000,
+      "unitText": "YEAR"
+    }
+  }
+} : null;
 ---
 
 <Layout 
   title={job ? `${job.title} at ${job.company_name} | FreshDrive` : 'Job Not Found | FreshDrive'}
   description={job ? `Apply for ${job.title} at ${job.company_name} located in ${job.location}. CTC: ${job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`}. Batch: ${job.batch_year}.` : undefined}
 >
+  {jobSchema && (
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jobSchema)} />
+  )}
+
   <Navbar />
   
   <main class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 my-8 flex-1">
@@ -67,96 +122,243 @@ const getCategoryLabel = (cat: string) => {
     </div>
 
     {job ? (
-      <div class="bg-white border-brutal-3 rounded-2xl shadow-brutal p-6 sm:p-8 flex flex-col gap-6">
-        <!-- Header Area -->
-        <div>
-          {/* Req Code & Batch info */}
-          <div class="flex flex-wrap items-center gap-2 mb-3">
-            <span class="font-mono text-xs font-bold text-slate uppercase">
-              {job.batch_year} &middot; {job.req_number || 'N/A'}
+      <div class="flex flex-col gap-8">
+        <!-- Job Details Card -->
+        <div class="bg-white border-brutal-3 rounded-2xl shadow-brutal p-6 sm:p-8 flex flex-col gap-6">
+          <!-- Header Area -->
+          <div>
+            {/* Req Code & Batch info */}
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+              <span class="font-mono text-xs font-bold text-slate uppercase">
+                {job.batch_year} &middot; {job.req_number || 'N/A'}
+              </span>
+              <span class="flex items-center gap-1.5 bg-cream border-2 border-ink px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold text-ink">
+                <span class={`w-2.5 h-2.5 rounded-full border border-ink ${isClosingSoon ? 'bg-amber animate-pulse' : 'bg-coral'}`}></span>
+                {isClosingSoon ? 'CLOSING SOON' : 'OPEN'}
+              </span>
+            </div>
+
+            {/* Job Title */}
+            <h1 class="font-display text-3xl sm:text-4xl font-black text-ink leading-tight mb-3">
+              {job.title}
+            </h1>
+
+            {/* Company Name & Logo */}
+            <div class="flex items-center gap-3">
+              {job.company_logo_url && (
+                <img 
+                  src={job.company_logo_url} 
+                  alt={`${job.company_name} Logo`} 
+                  class="w-7 h-7 rounded-full border border-ink object-cover"
+                />
+              )}
+              <span class="font-sans text-base font-bold text-ink">{job.company_name}</span>
+            </div>
+          </div>
+
+          {/* Metadata Tags */}
+          <div class="flex flex-wrap gap-2 border-t-2 border-b-2 border-ink/10 py-6">
+            <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+              <MapPin class="w-4 h-4" />
+              {job.location}
             </span>
-            <span class="flex items-center gap-1.5 bg-cream border-2 border-ink px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold text-ink">
-              <span class={`w-2.5 h-2.5 rounded-full border border-ink ${isClosingSoon ? 'bg-amber animate-pulse' : 'bg-coral'}`}></span>
-              {isClosingSoon ? 'CLOSING SOON' : 'OPEN'}
+            <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+              <IndianRupee class="w-4 h-4" />
+              {job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`}
+            </span>
+            <span class="inline-flex items-center gap-1 bg-white text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+              <Briefcase class="w-4 h-4 text-slate" />
+              {getCategoryLabel(job.category)}
+            </span>
+            <span class="inline-flex items-center gap-1 bg-white text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+              <FileSignature class="w-4 h-4 text-slate" />
+              Bond: {job.bond_period}
             </span>
           </div>
 
-          {/* Job Title */}
-          <h1 class="font-display text-3xl sm:text-4xl font-black text-ink leading-tight mb-3">
-            {job.title}
-          </h1>
-
-          {/* Company Name & Logo */}
-          <div class="flex items-center gap-3">
-            {job.company_logo_url && (
-              <img 
-                src={job.company_logo_url} 
-                alt={`${job.company_name} Logo`} 
-                class="w-7 h-7 rounded-full border border-ink object-cover"
-              />
+          {/* Job Profile & Details */}
+          <div class="flex flex-col gap-6">
+            {/* 1. About Company */}
+            {aboutCompany && (
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">About {job.company_name}</h2>
+                <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed">
+                  {aboutCompany}
+                </div>
+              </div>
             )}
-            <span class="font-sans text-base font-bold text-ink">{job.company_name}</span>
-          </div>
-        </div>
 
-        {/* Metadata Tags */}
-        <div class="flex flex-wrap gap-2 border-t-2 border-b-2 border-ink/10 py-6">
-          <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
-            <MapPin class="w-4 h-4" />
-            {job.location}
-          </span>
-          <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
-            <IndianRupee class="w-4 h-4" />
-            {job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`}
-          </span>
-          <span class="inline-flex items-center gap-1 bg-white text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
-            <Briefcase class="w-4 h-4 text-slate" />
-            {getCategoryLabel(job.category)}
-          </span>
-          <span class="inline-flex items-center gap-1 bg-white text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
-            <FileSignature class="w-4 h-4 text-slate" />
-            Bond: {job.bond_period}
-          </span>
-        </div>
+            {/* 2. Responsibilities */}
+            {responsibilities.length > 0 && (
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Responsibilities</h2>
+                <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed">
+                  <ul class="list-disc pl-5 flex flex-col gap-2">
+                    {responsibilities.map((resp) => (
+                      <li>{resp}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
 
-        {/* Job Profile & Details */}
-        <div class="flex flex-col gap-5">
-          {/* Description Card */}
-          <div class="flex flex-col gap-2">
-            <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Job Description</h2>
-            <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed">
-              {job.description}
+            {/* 3. Required Skills */}
+            {requiredSkills.length > 0 && (
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Required Skills</h2>
+                <div class="flex flex-wrap gap-2.5 py-1">
+                  {requiredSkills.map((skill) => (
+                    <span class="inline-flex items-center bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1 rounded-full shadow-[1px_1px_0px_0px_var(--ink)]">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 4. Good to Have Skills */}
+            {niceToHaveSkills.length > 0 && (
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Good to Have</h2>
+                <div class="flex flex-wrap gap-2.5 py-1">
+                  {niceToHaveSkills.map((skill) => (
+                    <span class="inline-flex items-center bg-white text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1 rounded-full shadow-[1px_1px_0px_0px_var(--ink)]">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 5. Job Description & Eligibility Criteria */}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Job Description Summary</h2>
+                <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed h-full">
+                  {job.description}
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Eligibility Criteria</h2>
+                <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed h-full">
+                  {job.eligibility}
+                </div>
+              </div>
             </div>
+
+            {/* 6. Perks & Benefits */}
+            {perksBenefits.length > 0 && (
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Perks & Benefits</h2>
+                <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed">
+                  <ul class="list-disc pl-5 flex flex-col gap-2">
+                    {perksBenefits.map((perk) => (
+                      <li>{perk}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* 7. Selection Process */}
+            {selectionProcess.length > 0 && (
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Selection Process</h2>
+                <div class="bg-white border-brutal p-5 rounded-xl shadow-button">
+                  <div class="flex flex-col md:flex-row gap-4 md:gap-2 justify-between items-start md:items-center">
+                    {selectionProcess.map((step, idx) => (
+                      <div class="flex items-center gap-3 relative z-10 flex-1 w-full">
+                        <div class="w-8 h-8 rounded-full border-2 border-ink bg-amber text-ink font-mono font-bold flex items-center justify-center text-sm shrink-0 shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+                          {idx + 1}
+                        </div>
+                        <div class="font-sans text-sm font-bold text-ink leading-tight">
+                          {step}
+                        </div>
+                        {idx < selectionProcess.length - 1 && (
+                          <span class="hidden md:block text-slate font-black select-none ml-auto px-1">→</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 8. How to Apply */}
+            {howToApply && (
+              <div class="flex flex-col gap-2">
+                <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">How to Apply</h2>
+                <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed">
+                  {howToApply}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Eligibility Card */}
-          <div class="flex flex-col gap-2">
-            <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Eligibility Criteria</h2>
-            <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed">
-              {job.eligibility}
+          {/* Footer / Apply Area */}
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t-2 border-ink/10 mt-2">
+            <div class="flex items-center gap-1.5 font-mono text-sm font-semibold">
+              <Calendar class="w-4 h-4 text-slate" />
+              <span class="text-slate">Closing Date:</span>
+              <span class={isClosingSoon ? 'text-coral font-bold' : 'text-ink font-bold'}>
+                {formatClosingDate(job.closing_date)}
+              </span>
             </div>
+
+            <a 
+              href={job.apply_url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="btn-brutal bg-coral text-ink font-sans font-bold py-3 px-8 rounded-full text-sm flex items-center justify-center gap-1.5 cursor-pointer hover:bg-coral/95 transition-all text-center w-full sm:w-auto shadow-button"
+            >
+              Apply Now <ExternalLink class="w-4 h-4" />
+            </a>
           </div>
         </div>
 
-        {/* Footer / Apply Area */}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t-2 border-ink/10 mt-2">
-          <div class="flex items-center gap-1.5 font-mono text-sm font-semibold">
-            <Calendar class="w-4 h-4 text-slate" />
-            <span class="text-slate">Closing Date:</span>
-            <span class={isClosingSoon ? 'text-coral font-bold' : 'text-ink font-bold'}>
-              {formatClosingDate(job.closing_date)}
-            </span>
-          </div>
-
-          <a 
-            href={job.apply_url} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            class="btn-brutal bg-coral text-ink font-sans font-bold py-3 px-8 rounded-full text-sm flex items-center justify-center gap-1.5 cursor-pointer hover:bg-coral/95 transition-all text-center w-full sm:w-auto shadow-button"
-          >
-            Apply Now <ExternalLink class="w-4 h-4" />
-          </a>
-        </div>
+        {/* Similar Jobs Section */}
+        {similarJobs.length > 0 && (
+          <section class="mt-8">
+            <h2 class="font-display text-2xl font-black text-ink mb-6">Similar Job Openings</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {similarJobs.map((simJob) => (
+                <a 
+                  href={`/jobs/${simJob.id}`}
+                  class="bg-white border-brutal rounded-[14px] shadow-brutal p-5 flex flex-col justify-between hover:-translate-y-1 hover:shadow-brutal-hover transition-all cursor-pointer no-underline text-ink"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2 mb-3">
+                      <span class="font-mono text-[10px] font-bold text-slate uppercase">
+                        {simJob.batch_year}
+                      </span>
+                      <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-[10px] font-bold border-2 border-ink px-2 py-0.5 rounded-full">
+                        {simJob.location.split(' (')[0]}
+                      </span>
+                    </div>
+                    <h3 class="font-display text-base font-black text-ink mb-1 hover:text-coral leading-tight line-clamp-1">
+                      {simJob.title}
+                    </h3>
+                    <div class="flex items-center gap-2 mb-3">
+                      {simJob.company_logo_url && (
+                        <img 
+                          src={simJob.company_logo_url} 
+                          alt="" 
+                          class="w-4 h-4 rounded-full border border-ink object-cover" 
+                        />
+                      )}
+                      <span class="font-sans text-xs font-bold text-ink">{simJob.company_name}</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between border-t border-ink/10 pt-3 mt-3 font-mono text-[10px] font-semibold text-slate">
+                    <span>CTC: {simJob.ctc_min} - {simJob.ctc_max} LPA</span>
+                    <span class="text-coral font-bold">Details →</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     ) : (
       <div class="bg-white border-brutal-3 rounded-2xl shadow-brutal p-12 text-center flex flex-col items-center justify-center gap-6 my-12">

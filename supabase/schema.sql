@@ -36,7 +36,14 @@ CREATE TABLE jobs (
   source_url TEXT, -- Link to original page where sourced
   is_sample BOOLEAN NOT NULL DEFAULT FALSE, -- Tagged as sample data in UI
   description TEXT, -- Detailed description of the job profile
-  eligibility TEXT -- Detailed eligibility criteria
+  eligibility TEXT, -- Detailed eligibility criteria
+  about_company TEXT,
+  responsibilities TEXT[],
+  required_skills TEXT[],
+  nice_to_have_skills TEXT[],
+  perks_benefits TEXT[],
+  selection_process TEXT[],
+  how_to_apply TEXT
 );
 
 -- =========================================================================

@@ -29,7 +29,14 @@ INSERT INTO jobs (
   source_url,
   is_sample,
   description,
-  eligibility
+  eligibility,
+  about_company,
+  responsibilities,
+  required_skills,
+  nice_to_have_skills,
+  perks_benefits,
+  selection_process,
+  how_to_apply
 ) VALUES
 -- 1. Razorpay (Product/MNC) - CTC 8-12 LPA, Closing soon
 (
@@ -51,7 +58,19 @@ INSERT INTO jobs (
   'https://razorpay.com/jobs/',
   TRUE,
   'Join Razorpay as a Software Engineer Intern and work on our core payment gateway team. You will build and scale high-throughput APIs, optimize database performance, and collaborate with product managers to deliver seamless developer experiences. Excellent opportunity to learn about scalable fintech architectures.',
-  'Eligibility: 2026 Batch B.E. / B.Tech / M.Tech in CS/IT or equivalent. Good understanding of data structures, algorithms, and web development in Node.js, Go, or Java. No active backlogs. Minimum 7.5 CGPA.'
+  'Eligibility: 2026 Batch B.E. / B.Tech / M.Tech in CS/IT or equivalent. Good understanding of data structures, algorithms, and web development in Node.js, Go, or Java. No active backlogs. Minimum 7.5 CGPA.',
+  'Razorpay is India''s leading fintech platform, helping businesses manage their payments, payouts, banking, and payroll in a single ecosystem. Founded in 2014, we power payments for over 8 million businesses across India, including top startups and enterprises.',
+  ARRAY[
+    'Collaborate with senior engineers to design and implement highly scalable payment gateway endpoints.',
+    'Optimize query performance and indexing across PostgreSQL and Redis databases.',
+    'Participate in unit and integration testing, code reviews, and DevOps deployment pipelines.',
+    'Investigate and troubleshoot transaction failures and API performance bottlenecks.'
+  ]::TEXT[],
+  ARRAY['Go', 'Node.js', 'Java', 'PostgreSQL', 'Data Structures', 'REST APIs']::TEXT[],
+  ARRAY['Docker', 'Redis', 'AWS']::TEXT[],
+  ARRAY['Competitive stipend', 'Full remote work option', 'Wellness allowance & mental health support', 'Direct mentorship from tech leads']::TEXT[],
+  ARRAY['Resume shortlisting', 'Online coding assessment', 'Technical interview (DSA & System Design)', 'HR round & offer discussion']::TEXT[],
+  'Apply directly on the Razorpay career portal using the link below. You will need to upload your resume, GitHub profile link, and latest college academic transcript.'
 ),
 -- 2. Infosys (IT Services) - CTC 3-4 LPA
 (
@@ -73,7 +92,19 @@ INSERT INTO jobs (
   'https://www.infosys.com/careers/',
   TRUE,
   'As an Associate Systems Engineer at Infosys, you will undergo our world-class training program at Mysore. Post-training, you will work on software development, cloud operations, application maintenance, or system administration for our global clients. You will write code, troubleshoot issues, and contribute to software maintenance cycles.',
-  'Eligibility: 2025/2026 Batch B.E. / B.Tech / M.E. / M.Tech in any engineering stream, or MCA / M.Sc (CS/IT). Minimum 60% or 6.0 CGPA throughout 10th, 12th, and graduation.'
+  'Eligibility: 2025/2026 Batch B.E. / B.Tech / M.E. / M.Tech in any engineering stream, or MCA / M.Sc (CS/IT). Minimum 60% or 6.0 CGPA throughout 10th, 12th, and graduation.',
+  'Infosys is a global leader in next-generation digital services and consulting. We operate in over 56 countries to navigate our clients'' digital transformation, enabling businesses to continuously improve and deliver value.',
+  ARRAY[
+    'Develop, test, and document software applications under standard development cycles.',
+    'Assist in cloud operations, software maintenance, and application troubleshooting.',
+    'Participate in mandatory classroom and lab-based training at the Infosys Mysore Campus.',
+    'Work in agile sprint teams to deliver quality features on client projects.'
+  ]::TEXT[],
+  ARRAY['Java or Python', 'SQL Basics', 'C++', 'HTML/CSS', 'Object-Oriented Programming', 'Communication Skills']::TEXT[],
+  ARRAY['Cloud Fundamentals (AWS/Azure)', 'Unix/Linux Shell Scripting']::TEXT[],
+  ARRAY['Structured technical training program', 'Comprehensive medical insurance', 'Access to global client projects', 'Corporate shuttle & gym access']::TEXT[],
+  ARRAY['Online aptitude & coding test (InfyTQ/HackWithInfy)', 'Technical interview', 'HR interview']::TEXT[],
+  'Register on the official Infosys careers site. Make sure to complete your profile details and submit your application via the job code referenced.'
 ),
 -- 3. BEL (Govt/PSU) - CTC 12 LPA
 (
@@ -95,7 +126,19 @@ INSERT INTO jobs (
   'https://bel-india.in/careers.aspx',
   TRUE,
   'Bharat Electronics Limited (BEL), a Navratna PSU under the Ministry of Defence, is hiring Graduate Engineer Trainees for its Bengaluru unit. You will work on design, development, and testing of advanced electronics systems, radars, and communication equipment for defense forces. The position includes a 2-year bond period.',
-  'Eligibility: 2026 Batch B.E. / B.Tech in Electronics & Communication, Telecommunication, or Electrical engineering. First class degree for General/OBC, pass class for SC/ST. Age limit: 25 years.'
+  'Eligibility: 2026 Batch B.E. / B.Tech in Electronics & Communication, Telecommunication, or Electrical engineering. First class degree for General/OBC, pass class for SC/ST. Age limit: 25 years.',
+  'Bharat Electronics Limited (BEL) is a premier Navratna public sector enterprise under the Ministry of Defence, Government of India. Headquartered in Bengaluru, BEL manufactures state-of-the-art electronic equipment for the Indian Armed Forces.',
+  ARRAY[
+    'Design and test RF components, microwave subsystems, and digital signal processing boards.',
+    'Provide technical support for radar installations, sonar arrays, and military communication terminals.',
+    'Prepare standard compliance reports and engineering drawings for military inspections.',
+    'Collaborate with defense scientists and quality assurance teams for prototype validation.'
+  ]::TEXT[],
+  ARRAY['Electronics & Communication', 'MATLAB', 'Embedded Systems', 'Digital Signal Processing', 'Microcontrollers', 'VLSI Design']::TEXT[],
+  ARRAY['Python scripting', 'LabVIEW']::TEXT[],
+  ARRAY['Government grade pay-scale & HRA', 'Medical facility for self & dependents', 'Provident fund & gratuity benefits', 'Subsidized canteen & housing quarters']::TEXT[],
+  ARRAY['GATE score / Written test score shortlisting', 'Technical interview', 'Document verification & medical fitness exam']::TEXT[],
+  'Download the official application form from the BEL portal, fill in your details, and submit it along with your GATE scorecard and required academic certificates.'
 ),
 -- 4. TCS Ninja (IT Services) - Chennai - CTC 3 LPA
 (
@@ -117,7 +160,19 @@ INSERT INTO jobs (
   'https://www.tcs.com/careers',
   TRUE,
   'TCS is hiring for Assistant System Engineers under the Ninja category. You will be assigned to client projects across various domains including BFSI, retail, manufacturing, and health. Responsibilities include software coding, business analytics, QA testing, and systems support.',
-  'Eligibility: 2026 Batch B.E. / B.Tech / M.E. / M.Tech / MCA / M.Sc. Minimum 60% throughout education. All academic courses must be completed in the stipulated duration. Maximum 1 backlog allowed at the time of application.'
+  'Eligibility: 2026 Batch B.E. / B.Tech / M.E. / M.Tech / MCA / M.Sc. Minimum 60% throughout education. All academic courses must be completed in the stipulated duration. Maximum 1 backlog allowed at the time of application.',
+  'Tata Consultancy Services (TCS) is an IT services, consulting, and business solutions organization that has partnered with many of the world''s largest businesses for over 50 years. We are a part of the Tata Group, India''s largest multinational business group.',
+  ARRAY[
+    'Perform application support, software coding, and system testing for global client accounts.',
+    'Analyze user requirements, draft test cases, and document bug fixes.',
+    'Undergo continuous upskilling on TCS iON digital learning platforms.',
+    'Collaborate with database administrators and business analysts to resolve production issues.'
+  ]::TEXT[],
+  ARRAY['C/C++', 'Java or Python', 'Database Basics', 'Operating Systems', 'Algorithms & Logic', 'Data Analysis']::TEXT[],
+  ARRAY['SDLC Methodologies', 'Git Version Control']::TEXT[],
+  ARRAY['Upskilling incentives via TCS Elevate', 'Comprehensive health insurance policy', 'Global career mobility opportunities', 'Defined retirement benefits (Gratuity/PF)']::TEXT[],
+  ARRAY['TCS NQT (National Qualifier Test)', 'Technical interview', 'Managerial & HR interview']::TEXT[],
+  'Create a profile on the TCS NextStep portal, choose the IT category, register for the NQT, and apply to this role once qualified.'
 ),
 -- 5. Amazon (Product/MNC) - Hyderabad - CTC 10-15 LPA
 (
@@ -139,7 +194,19 @@ INSERT INTO jobs (
   'https://www.amazon.jobs/',
   TRUE,
   'The ML Data Associate I is responsible for labeling and annotating complex linguistic, audio, and visual datasets to train machine learning models for Amazon Alexa and search devices. You will work in a fast-paced environment verifying annotations, fixing transcription errors, and compiling metrics.',
-  'Eligibility: 2025/2026 Batch graduates with any Bachelor''s degree. Excellent written and verbal communication in English. Familiarity with basic office tools (Excel) and computer systems.'
+  'Eligibility: 2025/2026 Batch graduates with any Bachelor''s degree. Excellent written and verbal communication in English. Familiarity with basic office tools (Excel) and computer systems.',
+  'Amazon is guided by four principles: customer obsession rather than competitor focus, passion for invention, commitment to operational excellence, and long-term thinking. We strive to be Earth’s most customer-centric company.',
+  ARRAY[
+    'Label and annotate text, audio, and visual data for machine learning model training.',
+    'Review dataset quality and flag errors in transcription or classification schemes.',
+    'Contribute to daily annotation metrics and feedback loops for machine learning scientists.',
+    'Collaborate with data managers to optimize data labelling guidelines.'
+  ]::TEXT[],
+  ARRAY['English Fluency', 'Analytical Skills', 'Microsoft Excel', 'Attention to Detail', 'Computer Literacy', 'Data Classification']::TEXT[],
+  ARRAY['Basic Python', 'Linguistic Knowledge']::TEXT[],
+  ARRAY['Industry standard salary + night shift allowance', 'Free cab transport facility', 'Amazon corporate discount', 'Medical, accident, and life insurance']::TEXT[],
+  ARRAY['Online assessment (Grammar, listening & aptitude)', 'Technical assessment round', 'Operations manager interview']::TEXT[],
+  'Apply via Amazon Jobs using your Amazon candidate profile. You must clear the automated online assessments before scheduling interviews.'
 ),
 -- 6. SSC CGL (Govt/PSU) - Delhi NCR - CTC 4-8 LPA
 (
@@ -161,7 +228,19 @@ INSERT INTO jobs (
   'https://ssc.nic.in/',
   TRUE,
   'Staff Selection Commission conducts the CGL examination to recruit candidates for Group B and Group C posts in various ministries, departments, and organizations of the Government of India. Selected candidates will hold critical positions in administration, audit, and tax inspection.',
-  'Eligibility: 2026 Batch graduates (Bachelor''s degree in any discipline). Age limit varies by post (typically 18-32 years). Selection based on Tier-I and Tier-II computer-based examinations.'
+  'Eligibility: 2026 Batch graduates (Bachelor''s degree in any discipline). Age limit varies by post (typically 18-32 years). Selection based on Tier-I and Tier-II computer-based examinations.',
+  'Staff Selection Commission (SSC) is an organization under the Government of India that recruits staff for various posts in the ministries, departments, and subordinate offices of the Government of India.',
+  ARRAY[
+    'Draft official communications, process cabinet files, and compile department budgets.',
+    'Perform field inspections, audit corporate tax returns, and inspect customs shipments.',
+    'Assist senior bureaucrats in administrative policymaking and public service delivery.',
+    'Manage public data files, file archiving systems, and official inventory lists.'
+  ]::TEXT[],
+  ARRAY['Quantitative Aptitude', 'General Awareness', 'Logical Reasoning', 'English Language', 'Basic Computer Operations', 'Indian Constitution Basics']::TEXT[],
+  ARRAY[]::TEXT[],
+  ARRAY['Central government grade pay with DA & HRA', 'LTC (Leave Travel Concession) allowance', 'Pension scheme (NPS) contribution', 'Government quarters allotment eligibility']::TEXT[],
+  ARRAY['Tier-1 Computer Based Exam', 'Tier-2 Computer Based Exam', 'Physical efficiency test (for specific posts)', 'Document verification']::TEXT[],
+  'Register on the official SSC website, upload your photograph/signature, pay the application fee, and select your exam center preferences.'
 ),
 -- 7. IBPS PO (Govt/PSU) - Pan India - CTC 8-9 LPA
 (
@@ -172,7 +251,7 @@ INSERT INTO jobs (
   'Pan India',
   8,
   9,
-  'govt',
+  'other',
   'IBPS-PO-2026',
   '2026 Batch',
   'None',
@@ -183,5 +262,17 @@ INSERT INTO jobs (
   'https://www.ibps.in/',
   TRUE,
   'The Institute of Banking Personnel Selection conducts the common recruitment process for Probationary Officers (PO) in public sector banks across India. Candidates undergo training in retail banking, credit operations, and branch administration.',
-  'Eligibility: 2026 Batch graduates with any Bachelor''s degree. Age limit: 20-30 years. Selection process consists of Preliminary and Main exams followed by a common interview.'
+  'Eligibility: 2026 Batch graduates with any Bachelor''s degree. Age limit: 20-30 years. Selection process consists of Preliminary and Main exams followed by a common interview.',
+  'Institute of Banking Personnel Selection (IBPS) is an autonomous body set up to recruit staff and officers for public sector banks, regional rural banks, and financial institutions in India.',
+  ARRAY[
+    'Oversee retail banking counters, authorize deposit transactions, and verify account documents.',
+    'Process agricultural, personal, and home loan files, evaluating creditworthiness.',
+    'Participate in local marketing drives to promote banking products and deposits.',
+    'Ensure compliance with Reserve Bank of India (RBI) directives and audit guidelines.'
+  ]::TEXT[],
+  ARRAY['Financial Literacy', 'Basic Accounting', 'Data Interpretation', 'Quantitative Aptitude', 'Customer Service', 'Reasoning Ability']::TEXT[],
+  ARRAY['Sales experience', 'Local language proficiency']::TEXT[],
+  ARRAY['Bank officer grade pay with DA & CCA', 'Leased accommodation facility', 'Concessional loans for self (car/home)', 'Defined travel & medical reimbursements']::TEXT[],
+  ARRAY['Preliminary online examination', 'Mains online examination', 'Common group discussion & interview', 'Final merit listing & bank allocation']::TEXT[],
+  'Submit your application online on the IBPS portal during the registration window, paying the exam fees online. Keep your scanned photographs and documents ready.'
 );
