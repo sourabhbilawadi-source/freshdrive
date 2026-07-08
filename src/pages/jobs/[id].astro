@@ -38,16 +38,27 @@ const perksBenefits = job?.perks_benefits || [];
 const selectionProcess = job?.selection_process || [];
 const howToApply = job?.how_to_apply || '';
 
-const isClosingSoon = (() => {
-  if (!job) return false;
+const isRolling = job && !job.closing_date;
+
+const { isClosingSoon, statusLabel } = (() => {
+  if (!job) return { isClosingSoon: false, statusLabel: '' };
+  if (isRolling) {
+    return { isClosingSoon: false, statusLabel: 'Rolling basis' };
+  }
   const now = new Date();
-  const closing = new Date(job.closing_date);
+  const closing = new Date(job.closing_date!);
   const diffTime = closing.getTime() - now.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays >= 0 && diffDays <= 5;
+  const isSoon = diffDays >= 0 && diffDays <= 5;
+  const isExpired = diffDays < 0;
+  return {
+    isClosingSoon: isSoon,
+    statusLabel: isExpired ? 'EXPIRED' : (isSoon ? 'CLOSING SOON' : 'OPEN')
+  };
 })();
 
-const formatClosingDate = (dateStr: string) => {
+const formatClosingDate = (dateStr: string | null) => {
+  if (!dateStr) return 'Apply anytime';
   const d = new Date(dateStr);
   return d.toLocaleDateString('en-US', {
     month: 'short',
@@ -72,7 +83,7 @@ const jobSchema = job ? {
   "title": job.title,
   "description": job.description,
   "datePosted": job.posted_date,
-  "validThrough": job.closing_date,
+  "validThrough": job.closing_date || undefined,
   "employmentType": job.category === 'govt' ? "FULL_TIME" : "FULL_TIME",
   "hiringOrganization": {
     "@type": "Organization",
@@ -134,7 +145,7 @@ const jobSchema = job ? {
               </span>
               <span class="flex items-center gap-1.5 bg-cream border-2 border-ink px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold text-ink">
                 <span class={`w-2.5 h-2.5 rounded-full border border-ink ${isClosingSoon ? 'bg-amber animate-pulse' : 'bg-coral'}`}></span>
-                {isClosingSoon ? 'CLOSING SOON' : 'OPEN'}
+                {statusLabel}
               </span>
             </div>
 
@@ -302,7 +313,7 @@ const jobSchema = job ? {
               <Calendar class="w-4 h-4 text-slate" />
               <span class="text-slate">Closing Date:</span>
               <span class={isClosingSoon ? 'text-coral font-bold' : 'text-ink font-bold'}>
-                {formatClosingDate(job.closing_date)}
+                {job.closing_date ? formatClosingDate(job.closing_date) : 'Rolling basis'}
               </span>
             </div>
 

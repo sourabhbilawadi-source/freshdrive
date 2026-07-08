@@ -8,15 +8,26 @@ interface Props {
 
 const { job } = Astro.props;
 
-// Determine if closing soon (<= 5 days)
-const now = new Date();
-const closing = new Date(job.closing_date);
-const diffTime = closing.getTime() - now.getTime();
-const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-const isClosingSoon = diffDays >= 0 && diffDays <= 5;
+const isRolling = !job.closing_date;
+
+const { isClosingSoon, statusLabel } = (() => {
+  if (isRolling) {
+    return { isClosingSoon: false, statusLabel: 'Rolling basis' };
+  }
+  const now = new Date();
+  const closing = new Date(job.closing_date!);
+  const diffTime = closing.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const isSoon = diffDays >= 0 && diffDays <= 5;
+  return {
+    isClosingSoon: isSoon,
+    statusLabel: isSoon ? 'CLOSING SOON' : 'OPEN'
+  };
+})();
 
 // Format closing date
-const formatClosingDate = (dateStr: string) => {
+const formatClosingDate = (dateStr: string | null) => {
+  if (!dateStr) return 'Apply anytime';
   const d = new Date(dateStr);
   return d.toLocaleDateString('en-US', {
     month: 'short',
@@ -65,7 +76,7 @@ const getCategoryLabel = (cat: string) => {
         <!-- Status dot -->
         <span class="flex items-center gap-1.5 bg-cream border-2 border-ink px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold text-ink">
           <span class={`w-2.5 h-2.5 rounded-full border border-ink ${isClosingSoon ? 'bg-amber animate-pulse' : 'bg-coral'}`}></span>
-          {isClosingSoon ? 'CLOSING SOON' : 'OPEN'}
+          {statusLabel}
         </span>
       </div>
 

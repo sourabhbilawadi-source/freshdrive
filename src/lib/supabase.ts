@@ -14,7 +14,7 @@ export interface Job {
   bond_period: string;
   apply_url: string;
   posted_date: string;
-  closing_date: string;
+  closing_date: string | null;
   is_active: boolean;
   source_url: string;
   is_sample: boolean;
@@ -216,7 +216,7 @@ export const MOCK_JOBS: Job[] = [
     bond_period: 'None',
     apply_url: 'https://ssc.nic.in/notice-board',
     posted_date: getRelativeDate(-5),
-    closing_date: getRelativeDate(30),
+    closing_date: null,
     is_active: true,
     source_url: 'https://ssc.nic.in/',
     is_sample: true,
@@ -280,28 +280,43 @@ const supabase = isCredentialsAvailable
   : null;
 
 export async function getJobs(): Promise<Job[]> {
-  if (!supabase) {
-    console.log('⚠️ Supabase credentials missing. Falling back to local mock data.');
-    return MOCK_JOBS;
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('jobs')
-      .select('*')
-      .eq('is_active', true)
-      .order('posted_date', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching jobs from Supabase:', error.message);
+  const rawJobs = await (async () => {
+    if (!supabase) {
+      console.log('⚠️ Supabase credentials missing. Falling back to local mock data.');
       return MOCK_JOBS;
     }
 
-    return (data as Job[]) || [];
-  } catch (err) {
-    console.error('Exception caught during job fetch, falling back:', err);
-    return MOCK_JOBS;
-  }
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('is_active', true)
+        .order('posted_date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching jobs from Supabase:', error.message);
+        return MOCK_JOBS;
+      }
+
+      return (data as Job[]) || [];
+    } catch (err) {
+      console.error('Exception caught during job fetch, falling back:', err);
+      return MOCK_JOBS;
+    }
+  })();
+
+  // Expiry filter: Hide jobs whose closing_date has passed (relative to build time)
+  // Nullable closing_date is never treated as expired
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  return rawJobs.filter(job => {
+    if (!job.is_active) return false;
+    if (!job.closing_date) return true; // rolling basis, never expires
+    const closing = new Date(job.closing_date);
+    const closingEnd = new Date(closing.getFullYear(), closing.getMonth(), closing.getDate(), 23, 59, 59, 999);
+    return closingEnd >= todayStart;
+  });
 }
 
 export async function getJobById(id: string): Promise<Job | null> {
