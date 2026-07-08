@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --lime: #C4E86B;
-  --cream: #FAF3E7;
-  --ink: #1C2415;
-  --coral: #FF6B4A;
-  --slate: #5C6055;
-  --amber: #DBA829;
+  --lime: #8FD3F4;
+  --cream: #F4F1EA;
+  --ink: #14213D;
+  --coral: #FB8500;
+  --slate: #5C6B7A;
+  --amber: #FFB703;
 }
 
 @theme {
