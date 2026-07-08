@@ -1,0 +1,56 @@
+---
+import { Sun, Moon } from 'lucide-react';
+---
+
+<button
+  id="theme-toggle"
+  class="btn-brutal bg-white text-ink p-2 rounded-full flex items-center justify-center cursor-pointer shadow-button hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-button-hover active:translate-x-[2px] active:translate-y-[2px] transition-all"
+  aria-label="Toggle dark mode"
+>
+  <!-- Sun Icon (visible in dark mode) -->
+  <span id="theme-sun" class="hidden">
+    <Sun class="w-4 h-4 text-ink" />
+  </span>
+  <!-- Moon Icon (visible in light mode) -->
+  <span id="theme-moon">
+    <Moon class="w-4 h-4 text-ink" />
+  </span>
+</button>
+
+<script is:inline>
+  function initThemeToggle() {
+    const toggleBtn = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('theme-sun');
+    const moonIcon = document.getElementById('theme-moon');
+    
+    if (!toggleBtn || !sunIcon || !moonIcon) return;
+
+    // Function to update the icons based on the current theme
+    function updateIcons(theme) {
+      if (theme === 'dark') {
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+      } else {
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+      }
+    }
+
+    // Get current theme from html attribute
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    updateIcons(currentTheme);
+
+    toggleBtn.addEventListener('click', () => {
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('freshdrive-theme', theme);
+      updateIcons(theme);
+    });
+  }
+
+  // Run on page load
+  initThemeToggle();
+
+  // Run on page transitions (if client routing is ever used)
+  document.addEventListener('astro:after-swap', initThemeToggle);
+</script>

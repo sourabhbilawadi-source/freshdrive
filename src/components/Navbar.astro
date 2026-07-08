@@ -1,4 +1,5 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
 ---
 <header class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <nav class="bg-lime border-brutal-3 rounded-2xl px-6 py-4 flex items-center justify-between shadow-brutal my-6" aria-label="Main Navigation">
@@ -13,7 +14,8 @@
       </div>
     </div>
     
-    <div>
+    <div class="flex items-center gap-3">
+      <ThemeToggle />
       <button 
         id="alerts-nav-btn"
         class="bg-ink text-lime hover:text-white font-sans font-bold px-5 py-2.5 rounded-full border-2 border-ink shadow-button hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-button-hover active:translate-x-[2.5px] active:translate-y-[2.5px] active:shadow-none transition-all cursor-pointer text-sm"

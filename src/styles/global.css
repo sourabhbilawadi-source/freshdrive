@@ -124,3 +124,58 @@ select:focus {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* =========================================================================
+   DARK MODE COLORS & CONTRAST ADJUSTMENTS
+   ========================================================================= */
+
+[data-theme="dark"] {
+  --lime: #5BA8D6;
+  --cream: #000000;
+  --ink: #E8E6E0;
+  --coral: #FF8A2B;
+  --slate: #9A9890;
+  --amber: #F5B942;
+}
+
+[data-theme="dark"] ::selection {
+  background-color: var(--lime) !important;
+  color: #061722 !important;
+}
+
+/* Force dark text and icon strokes on light-colored backgrounds in dark mode */
+[data-theme="dark"] .bg-lime {
+  color: #061722 !important;
+}
+[data-theme="dark"] .bg-lime svg,
+[data-theme="dark"] .bg-lime path {
+  stroke: #061722 !important;
+}
+
+[data-theme="dark"] .bg-coral {
+  color: #061722 !important;
+}
+[data-theme="dark"] .bg-coral svg,
+[data-theme="dark"] .bg-coral path {
+  stroke: #061722 !important;
+}
+
+[data-theme="dark"] .bg-amber {
+  color: #061722 !important;
+}
+[data-theme="dark"] .bg-amber svg,
+[data-theme="dark"] .bg-amber path {
+  stroke: #061722 !important;
+}
+
+/* Force bg-white elements (cards, popovers, dropdown options, search inputs) to true black */
+[data-theme="dark"] .bg-white {
+  background-color: #000000 !important;
+}
+
+/* Ensure checkmarks/indicators inside custom inputs have correct dark contrast */
+[data-theme="dark"] .bg-lime .bg-ink,
+[data-theme="dark"] .bg-coral .bg-ink,
+[data-theme="dark"] .bg-amber .bg-ink {
+  background-color: #061722 !important;
+}
