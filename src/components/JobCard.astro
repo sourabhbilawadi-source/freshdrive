@@ -1,6 +1,6 @@
 ---
 import type { Job } from '../lib/supabase';
-import { Calendar, ExternalLink, MapPin, IndianRupee } from 'lucide-react';
+import { Calendar, ExternalLink, MapPin, IndianRupee, Briefcase } from 'lucide-react';
 
 interface Props {
   job: Job;
@@ -23,6 +23,14 @@ const formatClosingDate = (dateStr: string) => {
     day: 'numeric',
     year: 'numeric'
   });
+};
+const getCategoryLabel = (cat: string) => {
+  switch (cat) {
+    case 'it_services': return 'IT Services';
+    case 'product': return 'Product / MNC';
+    case 'govt': return 'Govt / PSU';
+    default: return 'Other';
+  }
 };
 ---
 
@@ -80,18 +88,11 @@ const formatClosingDate = (dateStr: string) => {
       </div>
     </div>
 
-    <!-- Tags (Location / CTC) -->
+    <!-- Category Tag -->
     <div class="flex flex-wrap gap-2.5">
       <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-2.5 py-1 rounded-full shadow-[1px_1px_0px_0px_var(--ink)]">
-        <MapPin class="w-3.5 h-3.5" />
-        {job.location}
-      </span>
-      <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-2.5 py-1 rounded-full shadow-[1px_1px_0px_0px_var(--ink)]">
-        <IndianRupee class="w-3.5 h-3.5" />
-        {job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`}
-      </span>
-      <span class="inline-flex items-center gap-1 bg-cream text-ink font-sans text-xs font-bold border-2 border-ink px-2.5 py-1 rounded-full shadow-[1px_1px_0px_0px_var(--ink)]">
-        Bond: {job.bond_period}
+        <Briefcase class="w-3.5 h-3.5" />
+        {getCategoryLabel(job.category)}
       </span>
     </div>
   </div>
