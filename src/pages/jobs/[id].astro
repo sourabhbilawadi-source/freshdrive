@@ -76,6 +76,13 @@ const getCategoryLabel = (cat: string) => {
   }
 };
 
+const getCtcLabel = (j: Job) => {
+  if (j.ctc_min === null && j.ctc_max === null) {
+    return j.category === 'govt' ? 'Refer to notification' : 'Stipend not disclosed';
+  }
+  return j.ctc_min === j.ctc_max ? `${j.ctc_min} LPA` : `${j.ctc_min} - ${j.ctc_max} LPA`;
+};
+
 // Generate JSON-LD schema
 const jobSchema = job ? {
   "@context": "https://schema.org",
@@ -115,7 +122,7 @@ const jobSchema = job ? {
 
 <Layout 
   title={job ? `${job.title} at ${job.company_name} | FreshDrive` : 'Job Not Found | FreshDrive'}
-  description={job ? `Apply for ${job.title} at ${job.company_name} located in ${job.location}. CTC: ${(job.ctc_min === null && job.ctc_max === null) ? 'Stipend not disclosed' : (job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`)}. Batch: ${job.batch_year}.` : undefined}
+  description={job ? `Apply for ${job.title} at ${job.company_name} located in ${job.location}. CTC: ${getCtcLabel(job)}. Batch: ${job.batch_year}.` : undefined}
 >
   {jobSchema && (
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jobSchema)} />
@@ -177,7 +184,7 @@ const jobSchema = job ? {
             </span>
             <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
               <IndianRupee class="w-4 h-4" />
-              {(job.ctc_min === null && job.ctc_max === null) ? 'Stipend not disclosed' : (job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`)}
+              {getCtcLabel(job)}
             </span>
             <span class="inline-flex items-center gap-1 bg-white text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
               <Briefcase class="w-4 h-4 text-slate" />
@@ -364,7 +371,7 @@ const jobSchema = job ? {
                     </div>
                   </div>
                   <div class="flex items-center justify-between border-t border-ink/10 pt-3 mt-3 font-mono text-[10px] font-semibold text-slate">
-                    <span>CTC: {(simJob.ctc_min === null && simJob.ctc_max === null) ? 'Stipend not disclosed' : (simJob.ctc_min === simJob.ctc_max ? `${simJob.ctc_min} LPA` : `${simJob.ctc_min} - ${simJob.ctc_max} LPA`)}</span>
+                    <span>CTC: {getCtcLabel(simJob)}</span>
                     <span class="text-coral font-bold">Details →</span>
                   </div>
                 </a>

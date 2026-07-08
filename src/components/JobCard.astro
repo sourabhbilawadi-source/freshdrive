@@ -43,6 +43,12 @@ const getCategoryLabel = (cat: string) => {
     default: return 'Other';
   }
 };
+const getCtcLabel = (j: Job) => {
+  if (j.ctc_min === null && j.ctc_max === null) {
+    return j.category === 'govt' ? 'Refer to notification' : 'Stipend not disclosed';
+  }
+  return j.ctc_min === j.ctc_max ? `${j.ctc_min} LPA` : `${j.ctc_min} - ${j.ctc_max} LPA`;
+};
 ---
 
 <a 
@@ -107,7 +113,7 @@ const getCategoryLabel = (cat: string) => {
       </span>
       <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-2.5 py-1 rounded-full shadow-[1px_1px_0px_0px_var(--ink)]">
         <IndianRupee class="w-3.5 h-3.5" />
-        {(job.ctc_min === null && job.ctc_max === null) ? 'Stipend not disclosed' : (job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`)}
+        {getCtcLabel(job)}
       </span>
     </div>
   </div>
