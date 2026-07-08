@@ -8,7 +8,7 @@ import JobCard from '../components/JobCard.astro';
 
 // React Islands
 import SearchBar from '../components/SearchBar';
-import FilterSidebar from '../components/FilterSidebar';
+import FilterBar from '../components/FilterBar';
 import SortDropdown from '../components/SortDropdown';
 
 // Data fetching
@@ -42,34 +42,29 @@ const stats = await getStats(jobs);
         </div>
       </div>
 
-      <!-- Content Layout: Sidebar + Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
-        <!-- Sidebar filters -->
-        <aside class="md:col-span-1">
-          <FilterSidebar client:load />
-        </aside>
+      <!-- Horizontal Filter Bar -->
+      <FilterBar client:load />
 
-        <!-- Listings Grid -->
-        <div class="md:col-span-3">
-          <!-- Empty State (Hidden initially) -->
-          <div 
-            id="empty-state" 
-            style="display: none;" 
-            class="bg-white border-brutal p-12 rounded-2xl shadow-brutal text-center flex flex-col items-center justify-center gap-4"
-          >
-            <span class="text-4xl">🔍</span>
-            <h3 class="font-display text-2xl font-black text-ink">No matching openings found</h3>
-            <p class="font-sans text-sm font-semibold text-slate max-w-sm">
-              We couldn't find any listings matching those filters. Try clearing your search or category selections!
-            </p>
-          </div>
+      <!-- Listings Grid -->
+      <div>
+        <!-- Empty State (Hidden initially) -->
+        <div 
+          id="empty-state" 
+          style="display: none;" 
+          class="bg-white border-brutal p-12 rounded-2xl shadow-brutal text-center flex flex-col items-center justify-center gap-4"
+        >
+          <span class="text-4xl">🔍</span>
+          <h3 class="font-display text-2xl font-black text-ink">No matching openings found</h3>
+          <p class="font-sans text-sm font-semibold text-slate max-w-sm">
+            We couldn't find any listings matching those filters. Try clearing your search or category selections!
+          </p>
+        </div>
 
-          <!-- Job Cards Grid -->
-          <div id="job-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {jobs.map((job) => (
-              <JobCard job={job} />
-            ))}
-          </div>
+        <!-- Job Cards Grid -->
+        <div id="job-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {jobs.map((job) => (
+            <JobCard job={job} />
+          ))}
         </div>
       </div>
     </div>
