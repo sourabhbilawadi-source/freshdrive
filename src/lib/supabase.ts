@@ -213,6 +213,31 @@ export async function getJobs(): Promise<Job[]> {
   }
 }
 
+export async function getJobById(id: string): Promise<Job | null> {
+  if (!supabase) {
+    console.log('⚠️ Supabase credentials missing. Searching local mock data.');
+    return MOCK_JOBS.find((j) => j.id === id) || null;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      console.error(`Error fetching job ${id} from Supabase:`, error.message);
+      return MOCK_JOBS.find((j) => j.id === id) || null;
+    }
+
+    return (data as Job) || null;
+  } catch (err) {
+    console.error(`Exception caught during job ${id} fetch, falling back:`, err);
+    return MOCK_JOBS.find((j) => j.id === id) || null;
+  }
+}
+
 export interface JobStats {
   openRolesToday: number;
   companiesHiring: number;

@@ -26,8 +26,9 @@ const formatClosingDate = (dateStr: string) => {
 };
 ---
 
-<article 
-  class="job-card-wrapper bg-white border-brutal rounded-[14px] shadow-brutal flex flex-col relative transition-all hover:-translate-y-1 hover:shadow-brutal-hover cursor-pointer"
+<a 
+  href={`/jobs/${job.id}`}
+  class="job-card-wrapper bg-white border-brutal rounded-[14px] shadow-brutal flex flex-col relative transition-all hover:-translate-y-1 hover:shadow-brutal-hover cursor-pointer no-underline text-ink"
   data-category={job.category}
   data-location={job.location}
   data-ctc={job.ctc_max}
@@ -36,7 +37,6 @@ const formatClosingDate = (dateStr: string) => {
   data-closing-date={job.closing_date}
   data-title={job.title}
   data-company={job.company_name}
-  data-job={JSON.stringify(job)}
 >
   <!-- Optional: Sample Tag Badge -->
   {job.is_sample && (
@@ -116,11 +116,12 @@ const formatClosingDate = (dateStr: string) => {
       </span>
     </div>
 
-    <button 
+    <span 
       class="btn-brutal bg-ink text-cream hover:text-white font-sans font-bold px-4 py-2 rounded-full text-xs flex items-center gap-1 cursor-pointer"
+      role="button"
       aria-label={`View details for ${job.title} at ${job.company_name}`}
     >
       View Details <span class="font-sans text-xs font-black">→</span>
-    </button>
+    </span>
   </div>
-</article>
+</a>

@@ -1,0 +1,179 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import { getJobs, getJobById } from '../../lib/supabase';
+import type { Job } from '../../lib/supabase';
+import { Calendar, ExternalLink, MapPin, IndianRupee, Briefcase, FileSignature, ArrowLeft } from 'lucide-react';
+
+export async function getStaticPaths() {
+  const jobs = await getJobs();
+  return jobs.map((job) => ({
+    params: { id: job.id },
+    props: { job },
+  }));
+}
+
+const { id } = Astro.params;
+let { job } = Astro.props as { job: Job | undefined };
+
+if (!job && id) {
+  job = await getJobById(id);
+}
+
+const isClosingSoon = (() => {
+  if (!job) return false;
+  const now = new Date();
+  const closing = new Date(job.closing_date);
+  const diffTime = closing.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays >= 0 && diffDays <= 5;
+})();
+
+const formatClosingDate = (dateStr: string) => {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
+
+const getCategoryLabel = (cat: string) => {
+  switch (cat) {
+    case 'it_services': return 'IT Services';
+    case 'product': return 'Product / MNC';
+    case 'govt': return 'Govt / PSU';
+    default: return 'Other';
+  }
+};
+---
+
+<Layout 
+  title={job ? `${job.title} at ${job.company_name} | FreshDrive` : 'Job Not Found | FreshDrive'}
+  description={job ? `Apply for ${job.title} at ${job.company_name} located in ${job.location}. CTC: ${job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`}. Batch: ${job.batch_year}.` : undefined}
+>
+  <Navbar />
+  
+  <main class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 my-8 flex-1">
+    <!-- Back Link -->
+    <div class="mb-6">
+      <a 
+        href="/" 
+        class="inline-flex items-center gap-2 font-mono text-xs font-bold text-ink hover:text-coral transition-colors uppercase tracking-wider"
+      >
+        <ArrowLeft class="w-4 h-4" /> Back to all jobs
+      </a>
+    </div>
+
+    {job ? (
+      <div class="bg-white border-brutal-3 rounded-2xl shadow-brutal p-6 sm:p-8 flex flex-col gap-6">
+        <!-- Header Area -->
+        <div>
+          {/* Req Code & Batch info */}
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="font-mono text-xs font-bold text-slate uppercase">
+              {job.batch_year} &middot; {job.req_number || 'N/A'}
+            </span>
+            <span class="flex items-center gap-1.5 bg-cream border-2 border-ink px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold text-ink">
+              <span class={`w-2.5 h-2.5 rounded-full border border-ink ${isClosingSoon ? 'bg-amber animate-pulse' : 'bg-coral'}`}></span>
+              {isClosingSoon ? 'CLOSING SOON' : 'OPEN'}
+            </span>
+          </div>
+
+          {/* Job Title */}
+          <h1 class="font-display text-3xl sm:text-4xl font-black text-ink leading-tight mb-3">
+            {job.title}
+          </h1>
+
+          {/* Company Name & Logo */}
+          <div class="flex items-center gap-3">
+            {job.company_logo_url && (
+              <img 
+                src={job.company_logo_url} 
+                alt={`${job.company_name} Logo`} 
+                class="w-7 h-7 rounded-full border border-ink object-cover"
+              />
+            )}
+            <span class="font-sans text-base font-bold text-ink">{job.company_name}</span>
+          </div>
+        </div>
+
+        {/* Metadata Tags */}
+        <div class="flex flex-wrap gap-2 border-t-2 border-b-2 border-ink/10 py-6">
+          <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+            <MapPin class="w-4 h-4" />
+            {job.location}
+          </span>
+          <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+            <IndianRupee class="w-4 h-4" />
+            {job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`}
+          </span>
+          <span class="inline-flex items-center gap-1 bg-white text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+            <Briefcase class="w-4 h-4 text-slate" />
+            {getCategoryLabel(job.category)}
+          </span>
+          <span class="inline-flex items-center gap-1 bg-white text-ink font-sans text-xs font-bold border-2 border-ink px-3 py-1.5 rounded-full shadow-[1.5px_1.5px_0px_0px_var(--ink)]">
+            <FileSignature class="w-4 h-4 text-slate" />
+            Bond: {job.bond_period}
+          </span>
+        </div>
+
+        {/* Job Profile & Details */}
+        <div class="flex flex-col gap-5">
+          {/* Description Card */}
+          <div class="flex flex-col gap-2">
+            <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Job Description</h2>
+            <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed">
+              {job.description}
+            </div>
+          </div>
+
+          {/* Eligibility Card */}
+          <div class="flex flex-col gap-2">
+            <h2 class="font-sans text-xs font-bold text-slate uppercase tracking-wider">Eligibility Criteria</h2>
+            <div class="bg-white border-brutal p-5 rounded-xl shadow-button font-sans text-sm text-ink/90 leading-relaxed">
+              {job.eligibility}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer / Apply Area */}
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t-2 border-ink/10 mt-2">
+          <div class="flex items-center gap-1.5 font-mono text-sm font-semibold">
+            <Calendar class="w-4 h-4 text-slate" />
+            <span class="text-slate">Closing Date:</span>
+            <span class={isClosingSoon ? 'text-coral font-bold' : 'text-ink font-bold'}>
+              {formatClosingDate(job.closing_date)}
+            </span>
+          </div>
+
+          <a 
+            href={job.apply_url} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="btn-brutal bg-coral text-ink font-sans font-bold py-3 px-8 rounded-full text-sm flex items-center justify-center gap-1.5 cursor-pointer hover:bg-coral/95 transition-all text-center w-full sm:w-auto shadow-button"
+          >
+            Apply Now <ExternalLink class="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+    ) : (
+      <div class="bg-white border-brutal-3 rounded-2xl shadow-brutal p-12 text-center flex flex-col items-center justify-center gap-6 my-12">
+        <span class="text-5xl">🔍</span>
+        <h1 class="font-display text-3xl font-black text-ink">Job Not Found</h1>
+        <p class="font-sans text-sm font-semibold text-slate max-w-md">
+          We couldn't find a job opening matching the ID. It may have closed or been removed.
+        </p>
+        <a 
+          href="/" 
+          class="btn-brutal bg-lime text-ink font-sans font-bold py-3 px-6 rounded-full text-sm flex items-center gap-2 cursor-pointer shadow-button"
+        >
+          ← Back to all jobs
+        </a>
+      </div>
+    )}
+  </main>
+
+  <Footer />
+</Layout>
