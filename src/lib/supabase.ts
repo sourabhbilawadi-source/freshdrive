@@ -6,8 +6,8 @@ export interface Job {
   company_name: string;
   company_logo_url: string;
   location: string;
-  ctc_min: number;
-  ctc_max: number;
+  ctc_min: number | null;
+  ctc_max: number | null;
   category: 'it_services' | 'product' | 'govt' | 'other';
   req_number: string;
   batch_year: string;

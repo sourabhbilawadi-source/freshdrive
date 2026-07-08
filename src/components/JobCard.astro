@@ -50,7 +50,7 @@ const getCategoryLabel = (cat: string) => {
   class="job-card-wrapper bg-white border-brutal rounded-[14px] shadow-brutal flex flex-col relative transition-all hover:-translate-y-1 hover:shadow-brutal-hover cursor-pointer no-underline text-ink"
   data-category={job.category}
   data-location={job.location}
-  data-ctc={job.ctc_max}
+  data-ctc={job.ctc_max !== null ? job.ctc_max : 0}
   data-bond={job.bond_period}
   data-posted-date={job.posted_date}
   data-closing-date={job.closing_date}
@@ -99,11 +99,15 @@ const getCategoryLabel = (cat: string) => {
       </div>
     </div>
 
-    <!-- Category Tag -->
+    <!-- Category Tag & CTC Pill -->
     <div class="flex flex-wrap gap-2.5">
       <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-2.5 py-1 rounded-full shadow-[1px_1px_0px_0px_var(--ink)]">
         <Briefcase class="w-3.5 h-3.5" />
         {getCategoryLabel(job.category)}
+      </span>
+      <span class="inline-flex items-center gap-1 bg-lime text-ink font-sans text-xs font-bold border-2 border-ink px-2.5 py-1 rounded-full shadow-[1px_1px_0px_0px_var(--ink)]">
+        <IndianRupee class="w-3.5 h-3.5" />
+        {(job.ctc_min === null && job.ctc_max === null) ? 'Stipend not disclosed' : (job.ctc_min === job.ctc_max ? `${job.ctc_min} LPA` : `${job.ctc_min} - ${job.ctc_max} LPA`)}
       </span>
     </div>
   </div>

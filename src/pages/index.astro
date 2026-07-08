@@ -140,7 +140,8 @@ const stats = await getStats(jobs);
     cardElements.forEach((card) => {
       const category = card.getAttribute('data-category') || '';
       const location = (card.getAttribute('data-location') || '').toLowerCase();
-      const ctc = parseFloat(card.getAttribute('data-ctc') || '0');
+      const ctcRaw = card.getAttribute('data-ctc');
+      const ctc = (ctcRaw === null || ctcRaw === 'null' || ctcRaw === '') ? 0 : parseFloat(ctcRaw);
       const bond = card.getAttribute('data-bond') || '';
       const title = (card.getAttribute('data-title') || '').toLowerCase();
       const company = (card.getAttribute('data-company') || '').toLowerCase();
@@ -188,8 +189,10 @@ const stats = await getStats(jobs);
         // Ascending closing date (earliest closes first)
         return dateA.localeCompare(dateB);
       } else if (sortOrder === 'ctc') {
-        const ctcA = parseFloat(a.getAttribute('data-ctc') || '0');
-        const ctcB = parseFloat(b.getAttribute('data-ctc') || '0');
+        const ctcARaw = a.getAttribute('data-ctc');
+        const ctcBRaw = b.getAttribute('data-ctc');
+        const ctcA = (ctcARaw === null || ctcARaw === 'null' || ctcARaw === '') ? 0 : parseFloat(ctcARaw);
+        const ctcB = (ctcBRaw === null || ctcBRaw === 'null' || ctcBRaw === '') ? 0 : parseFloat(ctcBRaw);
         // Descending CTC (highest first)
         return ctcB - ctcA;
       }

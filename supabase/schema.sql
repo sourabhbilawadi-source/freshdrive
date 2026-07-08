@@ -23,8 +23,8 @@ CREATE TABLE jobs (
   company_name TEXT NOT NULL,
   company_logo_url TEXT,
   location TEXT NOT NULL DEFAULT 'Pan India',
-  ctc_min INTEGER, -- in LPA (e.g., 4)
-  ctc_max INTEGER, -- in LPA (e.g., 6)
+  ctc_min INTEGER, -- in LPA, nullable if stipend not disclosed
+  ctc_max INTEGER, -- in LPA, nullable if stipend not disclosed
   category job_category NOT NULL,
   req_number TEXT, -- Requisition / Batch code (e.g., INF-2026-9812)
   batch_year TEXT, -- Eligible batch year (e.g., "2026", "2025/2026")
